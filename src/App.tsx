@@ -7,381 +7,664 @@ export default function App() {
   const [cityLevel, setCityLevel] = useState(1);
   const [food, setFood] = useState(500);
   const [metal, setMetal] = useState(300);
-  const [fuel, setFuel] = useState(200);
+  const [fuel] = useState(200);
 
   useEffect(() => {
     const container = containerRef.current;
-
     if (!container) return;
 
     const scene = new THREE.Scene();
 
-    scene.background = new THREE.Color(0x11151a);
+    scene.background = new THREE.Color(0x18201c);
 
     const camera = new THREE.PerspectiveCamera(
-      50,
+      48,
       container.clientWidth / container.clientHeight,
       0.1,
-      1000
+      500
     );
 
-    camera.position.set(10, 9, 12);
+    camera.position.set(15, 15, 18);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: true
+      antialias: true,
+      powerPreference: "high-performance",
     });
 
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio, 2)
-    );
-
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
     renderer.setSize(
       container.clientWidth,
       container.clientHeight
     );
 
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     container.appendChild(renderer.domElement);
 
-    /*
-     * LIGHT
-     */
+    /* =========================
+       LIGHTING
+    ========================= */
 
-    const ambientLight =
-      new THREE.AmbientLight(
-        0xffffff,
-        1.8
-      );
-
-    scene.add(ambientLight);
-
-    const sun =
-      new THREE.DirectionalLight(
-        0xffffff,
-        2.5
-      );
-
-    sun.position.set(
-      10,
-      20,
-      10
+    const ambient = new THREE.HemisphereLight(
+      0xcbd5c2,
+      0x30352d,
+      2
     );
 
+    scene.add(ambient);
+
+    const sun = new THREE.DirectionalLight(
+      0xffe5bd,
+      3
+    );
+
+    sun.position.set(15, 25, 10);
     sun.castShadow = true;
 
     scene.add(sun);
 
-    /*
-     * GROUND
-     */
+    /* =========================
+       MATERIALS
+    ========================= */
 
-    const ground =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          24,
-          0.5,
-          24
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0x30352f
-        })
-      );
+    const groundMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x343a32,
+        roughness: 1,
+      });
 
-    ground.position.y = -0.25;
+    const roadMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x252525,
+        roughness: 1,
+      });
 
+    const concreteMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x68665e,
+        roughness: 0.95,
+      });
+
+    const darkConcrete =
+      new THREE.MeshStandardMaterial({
+        color: 0x3f403b,
+        roughness: 1,
+      });
+
+    const metalMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x252727,
+        metalness: 0.6,
+        roughness: 0.7,
+      });
+
+    const glassMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x52666a,
+        metalness: 0.1,
+        roughness: 0.35,
+      });
+
+    const vegetationMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x293d2b,
+        roughness: 1,
+      });
+
+    /* =========================
+       GROUND
+    ========================= */
+
+    const ground = new THREE.Mesh(
+      new THREE.BoxGeometry(30, 0.4, 30),
+      groundMaterial
+    );
+
+    ground.position.y = -0.2;
     ground.receiveShadow = true;
 
     scene.add(ground);
 
-    /*
-     * ROAD
-     */
+    /* =========================
+       ROADS
+    ========================= */
 
-    const road =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          3,
-          0.05,
-          24
-        ),
+    const roadVertical = new THREE.Mesh(
+      new THREE.BoxGeometry(3.5, 0.08, 30),
+      roadMaterial
+    );
+
+    roadVertical.position.y = 0.04;
+
+    scene.add(roadVertical);
+
+    const roadHorizontal = new THREE.Mesh(
+      new THREE.BoxGeometry(30, 0.08, 3.5),
+      roadMaterial
+    );
+
+    roadHorizontal.position.y = 0.05;
+
+    scene.add(roadHorizontal);
+
+    /* =========================
+       ROAD MARKINGS
+    ========================= */
+
+    for (let i = -13; i <= 13; i += 2.5) {
+      const line = new THREE.Mesh(
+        new THREE.BoxGeometry(0.18, 0.03, 1.1),
         new THREE.MeshStandardMaterial({
-          color: 0x202020
+          color: 0xa19d83,
         })
       );
 
-    road.position.y = 0.03;
+      line.position.set(0, 0.11, i);
 
-    scene.add(road);
+      scene.add(line);
+    }
 
-    const road2 =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          24,
-          0.05,
-          3
-        ),
+    for (let i = -13; i <= 13; i += 2.5) {
+      const line = new THREE.Mesh(
+        new THREE.BoxGeometry(1.1, 0.03, 0.18),
         new THREE.MeshStandardMaterial({
-          color: 0x202020
+          color: 0xa19d83,
         })
       );
 
-    road2.position.y = 0.04;
+      line.position.set(i, 0.12, 0);
 
-    scene.add(road2);
+      scene.add(line);
+    }
 
-    /*
-     * CITY BUILDING FUNCTION
-     */
+    /* =========================
+       BUILDING FUNCTION
+    ========================= */
 
-    const createBuilding = (
+    const building = (
       x: number,
       z: number,
       width: number,
       height: number,
       depth: number,
-      color: number
+      material: THREE.Material
     ) => {
-      const building =
-        new THREE.Mesh(
-          new THREE.BoxGeometry(
-            width,
-            height,
-            depth
-          ),
-          new THREE.MeshStandardMaterial({
-            color
-          })
-        );
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(
+          width,
+          height,
+          depth
+        ),
+        material
+      );
 
-      building.position.set(
+      mesh.position.set(
         x,
         height / 2,
         z
       );
 
-      building.castShadow = true;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
 
-      building.receiveShadow = true;
+      scene.add(mesh);
 
-      scene.add(building);
-
-      return building;
+      return mesh;
     };
 
-    /*
-     * COMMAND CENTER
-     */
+    /* =========================
+       COMMAND CENTER
+    ========================= */
 
-    createBuilding(
+    const command = building(
       0,
       0,
-      4,
-      3,
-      4,
-      0x555555
+      4.8,
+      3.4,
+      4.8,
+      concreteMaterial
     );
 
-    /*
-     * HOSPITAL
-     */
-
-    createBuilding(
-      -5,
-      -4,
-      3,
-      2,
-      3,
-      0x6b6b6b
+    const commandRoof = new THREE.Mesh(
+      new THREE.ConeGeometry(
+        3.7,
+        1.4,
+        4
+      ),
+      darkConcrete
     );
 
-    /*
-     * BARRACKS
-     */
+    commandRoof.position.set(
+      0,
+      4.1,
+      0
+    );
 
-    createBuilding(
+    commandRoof.rotation.y =
+      Math.PI / 4;
+
+    commandRoof.castShadow = true;
+
+    scene.add(commandRoof);
+
+    /* =========================
+       COMMAND TOWER
+    ========================= */
+
+    const tower = building(
+      0,
+      -3,
+      1.2,
       5,
-      -4,
-      3,
-      2,
-      3,
-      0x505050
+      1.2,
+      metalMaterial
     );
 
-    /*
-     * RESEARCH CENTER
-     */
+    const towerTop =
+      new THREE.Mesh(
+        new THREE.CylinderGeometry(
+          0.7,
+          0.7,
+          0.5,
+          8
+        ),
+        metalMaterial
+      );
 
-    createBuilding(
+    towerTop.position.set(
+      0,
+      5.3,
+      -3
+    );
+
+    scene.add(towerTop);
+
+    /* =========================
+       HOSPITAL
+    ========================= */
+
+    building(
+      -6,
       -5,
       4,
-      3,
-      2.5,
-      3,
-      0x464646
+      2.7,
+      3.5,
+      concreteMaterial
     );
 
-    /*
-     * WAREHOUSE
-     */
+    const hospitalRoof =
+      new THREE.Mesh(
+        new THREE.BoxGeometry(
+          4.3,
+          0.35,
+          3.8
+        ),
+        darkConcrete
+      );
 
-    createBuilding(
+    hospitalRoof.position.set(
+      -6,
+      2.85,
+      -5
+    );
+
+    scene.add(hospitalRoof);
+
+    /* =========================
+       BARRACKS
+    ========================= */
+
+    building(
+      6,
+      -5,
+      4,
+      2.4,
+      3.5,
+      darkConcrete
+    );
+
+    /* =========================
+       RESEARCH CENTER
+    ========================= */
+
+    building(
+      -6,
       5,
       4,
       3,
-      1.8,
-      3,
-      0x3f3f3f
+      3.5,
+      concreteMaterial
     );
 
-    /*
-     * RUINED BUILDINGS
-     */
+    /* =========================
+       WAREHOUSE
+    ========================= */
 
-    const ruin1 =
-      createBuilding(
-        -9,
-        -7,
-        2,
-        2,
-        2,
-        0x292929
+    building(
+      6,
+      5,
+      4.5,
+      2.1,
+      3.5,
+      darkConcrete
+    );
+
+    /* =========================
+       WINDOWS
+    ========================= */
+
+    const addWindow = (
+      x: number,
+      y: number,
+      z: number
+    ) => {
+      const window = new THREE.Mesh(
+        new THREE.BoxGeometry(
+          0.55,
+          0.65,
+          0.08
+        ),
+        glassMaterial
       );
 
-    ruin1.rotation.z =
-      -0.12;
-
-    const ruin2 =
-      createBuilding(
-        9,
-        -7,
-        2,
-        1.5,
-        2,
-        0x252525
+      window.position.set(
+        x,
+        y,
+        z
       );
 
-    ruin2.rotation.z =
-      0.08;
+      scene.add(window);
+    };
 
-    const ruin3 =
-      createBuilding(
-        -9,
-        7,
-        2,
-        2.5,
-        2,
-        0x303030
+    addWindow(-7.2, 1.5, -3.2);
+    addWindow(-5, 1.5, -3.2);
+    addWindow(5, 1.4, -3.2);
+    addWindow(7.2, 1.4, -3.2);
+
+    /* =========================
+       RUINS
+    ========================= */
+
+    const ruin = (
+      x: number,
+      z: number,
+      scale: number
+    ) => {
+      const base = building(
+        x,
+        z,
+        2.4 * scale,
+        1.5 * scale,
+        2.4 * scale,
+        darkConcrete
       );
 
-    ruin3.rotation.z =
-      -0.1;
+      base.rotation.y =
+        (Math.random() - 0.5) * 0.25;
 
-    /*
-     * CITY WALL
-     */
+      base.rotation.z =
+        (Math.random() - 0.5) * 0.15;
+
+      return base;
+    };
+
+    ruin(-10, -8, 1);
+    ruin(10, -8, 0.8);
+    ruin(-10, 8, 0.9);
+    ruin(10, 8, 1.1);
+
+    /* =========================
+       CITY WALL
+    ========================= */
 
     const wallMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0x242424
+        color: 0x30322f,
+        roughness: 1,
       });
 
-    const wallNorth =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          22,
-          2,
-          0.7
-        ),
-        wallMaterial
-      );
+    const wallHeight = 2.5;
 
-    wallNorth.position.set(
-      0,
-      1,
-      -10
+    const northWall = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        26,
+        wallHeight,
+        0.8
+      ),
+      wallMaterial
     );
 
-    wallNorth.castShadow = true;
-
-    scene.add(wallNorth);
-
-    const wallSouth =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          22,
-          2,
-          0.7
-        ),
-        wallMaterial
-      );
-
-    wallSouth.position.set(
+    northWall.position.set(
       0,
-      1,
-      10
+      wallHeight / 2,
+      -13
     );
 
-    wallSouth.castShadow = true;
+    northWall.castShadow = true;
 
-    scene.add(wallSouth);
+    scene.add(northWall);
 
-    const wallWest =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.7,
-          2,
-          22
-        ),
-        wallMaterial
-      );
+    const southWall = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        26,
+        wallHeight,
+        0.8
+      ),
+      wallMaterial
+    );
 
-    wallWest.position.set(
-      -10,
-      1,
+    southWall.position.set(
+      0,
+      wallHeight / 2,
+      13
+    );
+
+    southWall.castShadow = true;
+
+    scene.add(southWall);
+
+    const westWall = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        0.8,
+        wallHeight,
+        26
+      ),
+      wallMaterial
+    );
+
+    westWall.position.set(
+      -13,
+      wallHeight / 2,
       0
     );
 
-    wallWest.castShadow = true;
+    westWall.castShadow = true;
 
-    scene.add(wallWest);
+    scene.add(westWall);
 
-    const wallEast =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.7,
-          2,
-          22
-        ),
-        wallMaterial
-      );
+    const eastWall = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        0.8,
+        wallHeight,
+        26
+      ),
+      wallMaterial
+    );
 
-    wallEast.position.set(
-      10,
-      1,
+    eastWall.position.set(
+      13,
+      wallHeight / 2,
       0
     );
 
-    wallEast.castShadow = true;
+    eastWall.castShadow = true;
 
-    scene.add(wallEast);
+    scene.add(eastWall);
 
-    /*
-     * CAMERA TOUCH ROTATION
-     */
+    /* =========================
+       GATE
+    ========================= */
+
+    const gateLeft = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        3,
+        4,
+        1
+      ),
+      wallMaterial
+    );
+
+    gateLeft.position.set(
+      -2.5,
+      2,
+      13
+    );
+
+    scene.add(gateLeft);
+
+    const gateRight = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        3,
+        4,
+        1
+      ),
+      wallMaterial
+    );
+
+    gateRight.position.set(
+      2.5,
+      2,
+      13
+    );
+
+    scene.add(gateRight);
+
+    const gateRoof = new THREE.Mesh(
+      new THREE.BoxGeometry(
+        8,
+        1,
+        1.3
+      ),
+      wallMaterial
+    );
+
+    gateRoof.position.set(
+      0,
+      4.3,
+      13
+    );
+
+    scene.add(gateRoof);
+
+    /* =========================
+       TREES
+    ========================= */
+
+    const createTree = (
+      x: number,
+      z: number,
+      scale: number
+    ) => {
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(
+          0.18 * scale,
+          0.25 * scale,
+          1.8 * scale,
+          7
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0x40352a
+        })
+      );
+
+      trunk.position.set(
+        x,
+        0.9 * scale,
+        z
+      );
+
+      trunk.castShadow = true;
+
+      scene.add(trunk);
+
+      const crown = new THREE.Mesh(
+        new THREE.ConeGeometry(
+          1.1 * scale,
+          2.5 * scale,
+          7
+        ),
+        vegetationMaterial
+      );
+
+      crown.position.set(
+        x,
+        2.4 * scale,
+        z
+      );
+
+      crown.castShadow = true;
+
+      scene.add(crown);
+    };
+
+    createTree(-11, -2, 1);
+    createTree(11, -2, 0.8);
+    createTree(-11, 2, 0.9);
+    createTree(11, 2, 1.1);
+    createTree(-8, -11, 0.8);
+    createTree(8, -11, 1);
+
+    /* =========================
+       RUBBLE
+    ========================= */
+
+    for (let i = 0; i < 35; i++) {
+      const rubble = new THREE.Mesh(
+        new THREE.BoxGeometry(
+          0.25 + Math.random() * 0.45,
+          0.2 + Math.random() * 0.35,
+          0.25 + Math.random() * 0.45
+        ),
+        darkConcrete
+      );
+
+      const x =
+        (Math.random() - 0.5) * 24;
+
+      const z =
+        (Math.random() - 0.5) * 24;
+
+      rubble.position.set(
+        x,
+        0.2,
+        z
+      );
+
+      rubble.rotation.set(
+        Math.random(),
+        Math.random(),
+        Math.random()
+      );
+
+      rubble.castShadow = true;
+
+      scene.add(rubble);
+    }
+
+    /* =========================
+       CAMERA CONTROL
+    ========================= */
 
     let dragging = false;
-
     let previousX = 0;
 
     const pointerDown = (
       event: PointerEvent
     ) => {
       dragging = true;
-
-      previousX =
-        event.clientX;
+      previousX = event.clientX;
     };
 
     const pointerUp = () => {
@@ -393,15 +676,13 @@ export default function App() {
     ) => {
       if (!dragging) return;
 
-      const difference =
-        event.clientX -
-        previousX;
+      const movement =
+        event.clientX - previousX;
 
       scene.rotation.y +=
-        difference * 0.006;
+        movement * 0.006;
 
-      previousX =
-        event.clientX;
+      previousX = event.clientX;
     };
 
     renderer.domElement.addEventListener(
@@ -424,14 +705,14 @@ export default function App() {
       pointerMove
     );
 
-    /*
-     * ANIMATION
-     */
+    /* =========================
+       ANIMATION
+    ========================= */
 
-    let animationFrame = 0;
+    let frame = 0;
 
     const animate = () => {
-      animationFrame =
+      frame =
         requestAnimationFrame(
           animate
         );
@@ -444,13 +725,11 @@ export default function App() {
 
     animate();
 
-    /*
-     * RESIZE
-     */
+    /* =========================
+       RESIZE
+    ========================= */
 
     const resize = () => {
-      if (!container) return;
-
       camera.aspect =
         container.clientWidth /
         container.clientHeight;
@@ -469,33 +748,11 @@ export default function App() {
     );
 
     return () => {
-      cancelAnimationFrame(
-        animationFrame
-      );
+      cancelAnimationFrame(frame);
 
       window.removeEventListener(
         "resize",
         resize
-      );
-
-      renderer.domElement.removeEventListener(
-        "pointerdown",
-        pointerDown
-      );
-
-      renderer.domElement.removeEventListener(
-        "pointerup",
-        pointerUp
-      );
-
-      renderer.domElement.removeEventListener(
-        "pointerleave",
-        pointerUp
-      );
-
-      renderer.domElement.removeEventListener(
-        "pointermove",
-        pointerMove
       );
 
       renderer.dispose();
@@ -513,10 +770,7 @@ export default function App() {
   }, []);
 
   const upgradeCity = () => {
-    if (
-      food < 100 ||
-      metal < 100
-    ) {
+    if (food < 100 || metal < 100) {
       return;
     }
 
@@ -544,17 +798,11 @@ export default function App() {
 
         <div className="resources">
 
-          <span>
-            🍖 {food}
-          </span>
+          <span>🍖 {food}</span>
 
-          <span>
-            🔩 {metal}
-          </span>
+          <span>🔩 {metal}</span>
 
-          <span>
-            ⛽ {fuel}
-          </span>
+          <span>⛽ {fuel}</span>
 
         </div>
 
