@@ -27,6 +27,10 @@ body {
   color: white;
 }
 
+/* =========================
+   TOP BAR
+========================= */
+
 .topbar {
   position: absolute;
   top: 0;
@@ -61,6 +65,10 @@ body {
   font-size: 14px;
   font-weight: bold;
 }
+
+/* =========================
+   GAME AREA
+========================= */
 
 .game-area {
   position: absolute;
@@ -97,6 +105,10 @@ body {
   height: 100% !important;
 }
 
+/* =========================
+   CITY INFO
+========================= */
+
 .city-info {
   position: absolute;
 
@@ -131,6 +143,10 @@ body {
   letter-spacing: 1px;
 }
 
+/* =========================
+   QUEST PANEL
+========================= */
+
 .quest-panel {
   position: absolute;
 
@@ -148,6 +164,9 @@ body {
   border-radius: 12px;
 
   z-index: 10;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.5);
 }
 
 .quest-panel h2 {
@@ -198,30 +217,194 @@ body {
   line-height: 1.6;
 }
 
+/* =========================
+   BUILDING PANEL
+========================= */
+
+.building-panel {
+  position: absolute;
+
+  top: 82px;
+  right: 18px;
+
+  width: min(
+    330px,
+    calc(100% - 36px)
+  );
+
+  padding: 20px;
+
+  background: rgba(12, 12, 12, 0.96);
+
+  border: 1px solid #555;
+
+  border-radius: 14px;
+
+  z-index: 30;
+
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.65);
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.close-panel {
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: #333;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+}
+
+.close-panel:active {
+  transform: scale(0.92);
+}
+
+/* =========================
+   BUILDING ICON
+========================= */
+
+.building-icon {
+  font-size: 42px;
+
+  margin-bottom: 5px;
+}
+
+/* =========================
+   BUILDING TITLE
+========================= */
+
+.building-panel h2 {
+  margin: 0;
+
+  font-size: 20px;
+
+  letter-spacing: 1px;
+}
+
+.building-level {
+  margin-top: 7px;
+
+  color: #aaa;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+/* =========================
+   BUILDING DESCRIPTION
+========================= */
+
+.building-panel p {
+  margin-top: 12px;
+
+  color: #ccc;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   UPGRADE COST
+========================= */
+
+.upgrade-cost {
+  display: flex;
+
+  gap: 15px;
+
+  margin: 15px 0;
+
+  font-weight: bold;
+}
+
+/* =========================
+   UPGRADE BUTTON
+========================= */
+
+.upgrade-button {
+  width: 100%;
+
+  padding: 14px;
+
+  border: 0;
+
+  border-radius: 8px;
+
+  background: #777;
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.upgrade-button:active {
+  transform: scale(0.98);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
 
   .topbar {
     height: 58px;
+
     padding: 0 12px;
   }
 
   .logo {
     font-size: 16px;
+
     letter-spacing: 2px;
   }
 
   .resources {
     gap: 7px;
+
     font-size: 11px;
   }
 
   .city-info {
     top: 72px;
+
     left: 12px;
+
+    padding: 10px 12px;
+  }
+
+  .city-name {
+    font-size: 17px;
   }
 
   .quest-panel {
     left: 12px;
+
     bottom: 12px;
 
     width: calc(100% - 24px);
@@ -229,4 +412,21 @@ body {
     padding: 15px;
   }
 
+  .building-panel {
+    top: 70px;
+
+    right: 12px;
+
+    width: calc(100% - 24px);
+
+    padding: 18px;
+  }
+
+  .building-icon {
+    font-size: 36px;
+  }
+
+  .building-panel h2 {
+    font-size: 18px;
+  }
 }
