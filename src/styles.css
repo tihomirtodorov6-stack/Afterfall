@@ -1,46 +1,106 @@
-:root {
-  --bg: #0f1210;
-  --panel: #1a1f1c;
-  --accent: #7cff6b;
-  --danger: #ff4d4d;
-  --text: #e8e8e8;
-  --muted: #8a9a8a;
-  --grid: #1e2a22;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+:root{
+  --bg:#0a0f12;
+  --panel:#151d22;
+  --gold:#ffcc33;
+  --cyan:#00e5ff;
+  --green:#7cff6b;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, monospace; overflow:hidden; }
-.game-root { display:flex; flex-direction:column; height:100vh; max-width:600px; margin:0 auto; background: radial-gradient(circle at 50% 0%, #1c2a1e 0%, var(--bg) 70%); }
-.top-bar { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background: var(--panel); border-bottom:2px solid #2a3a2e; }
-.logo { font-weight:900; letter-spacing:2px; font-size:18px; }
-.logo span { color: var(--accent); }
-.stats { display:flex; gap:12px; font-size:13px; }
-.stat { display:flex; align-items:center; gap:4px; background:#0f1512; padding:4px 8px; border-radius:6px; border:1px solid #2a3a2e; }
-.stat b { color: var(--accent); }
-.hp-bar { height:8px; background:#2a1a1a; border-radius:4px; overflow:hidden; margin: 8px 16px; border:1px solid #3a2a2a; }
-.hp-fill { height:100%; background: linear-gradient(90deg, #ff4d4d, #ff8a4d); transition: width 0.3s; }
-.grid-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:8px; overflow:auto; }
-.grid { display:grid; gap:2px; background: var(--grid); padding:4px; border-radius:8px; border:2px solid #2d3d32; }
-.cell { width: clamp(20px, 6vw, 34px); height: clamp(20px, 6vw, 34px); background:#121814; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; position:relative; user-select:none; }
-.cell:hover { filter:brightness(1.3); outline:1px solid var(--accent); }
-.cell.base { background: radial-gradient(circle, #2a3a2e, #121814); border:1px solid var(--accent); }
-.cell.wall { background:#3a4a42; box-shadow: inset 0 0 0 2px #5a6a62; }
-.cell.tower { background:#1e2e3a; box-shadow: inset 0 0 0 2px #4a8aff; }
-.cell.farm { background:#2a341e; }
-.cell.barracks { background:#2e2a1e; }
-.cell.zombie { background:#2a1212!important; animation: pulse 0.5s infinite alternate; }
-@keyframes pulse { from { filter:brightness(1); } to { filter:brightness(1.5); } }
-.cell.hp { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); }
-.build-bar { background: var(--panel); border-top:2px solid #2a3a2e; padding:10px 12px; }
-.build-title { font-size:11px; color:var(--muted); letter-spacing:1px; margin-bottom:6px; }
-.builds { display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; }
-.b-card { background:#121814; border:1px solid #2a3a2e; border-radius:8px; padding:6px; text-align:center; cursor:pointer; }
-.b-card.active { border-color: var(--accent); background:#1a2a1e; box-shadow:0 0 10px rgba(124,255,107,0.2); }
-.b-card.disabled { opacity:0.4; pointer-events:none; }
-.b-card.icon { font-size:18px; }
-.b-card.name { font-size:10px; margin-top:2px; font-weight:700; }
-.b-card.cost { font-size:9px; color:var(--muted); }
-.actions { display:flex; gap:8px; margin-top:10px; }
-.btn { flex:1; padding:12px; border:none; border-radius:8px; font-weight:800; letter-spacing:1px; cursor:pointer; text-transform:uppercase; font-size:13px; }
-.btn-wave { background: linear-gradient(180deg, #ff5a5a, #b82828); color:white; }
-.btn-clear { background:#1e2420; color:var(--muted); border:1px solid #2a3a2e; }
-.log { font-size:11px; color:var(--muted); text-align:center; margin-top:6px; height:14px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg); color:#e8e8e8; font-family:'Segoe UI', sans-serif; overflow:hidden}
+
+.game-root{
+  width:100%; max-width:600px; margin:0 auto; height:100vh;
+  background: radial-gradient(ellipse at top, #1a2e35 0%, #0a0f12 60%);
+  display:flex; flex-direction:column; position:relative;
+}
+
+/* TOP BAR като Camel */
+.top-camel{
+  background: linear-gradient(180deg, #1e2f38, #111a1f);
+  border-bottom:2px solid #2a3f4a;
+  padding:6px 8px;
+  font-size:11px;
+}
+.top-row1{ display:flex; justify-content:space-between; align-items:center; }
+.vip{ background:linear-gradient(90deg,#8a1a1a,#ffaa00); padding:3px 10px; border-radius:4px; font-weight:900; font-family:'Orbitron'; }
+.res-row{ display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; opacity:0.9 }
+.res-row span{ background:#0f1a1f; padding:2px 6px; border-radius:4px; border:1px solid #2a3f4a; }
+
+/* CITY AREA */
+.city-wrap{
+  flex:1; position:relative; overflow:hidden;
+  background: 
+    linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)),
+    url('https://i.imgur.com/8Km9tLL.png');
+  background-size:cover;
+  background-position:center;
+  perspective:1000px;
+}
+.city-grid{
+  width:100%; height:100%; position:relative;
+  transform: rotateX(15deg);
+  transform-origin:center top;
+}
+
+/* BUILDINGS */
+.building{
+  position:absolute; width:72px; height:72px;
+  background: linear-gradient(180deg, #2a3a42, #1a252c);
+  border:2px solid #3a5a6a;
+  border-radius:8px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; transition: all 0.2s;
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+.building:hover{ transform: scale(1.1) translateY(-4px); border-color: var(--cyan); box-shadow:0 0 20px rgba(0,229,255,0.5); }
+.building.hq{
+  width:100px; height:100px;
+  background: radial-gradient(circle, #1a3a4a, #0a1a2a);
+  border:2px solid var(--cyan);
+  animation: hq-pulse 2s infinite, float 3s infinite;
+  box-shadow: 0 0 30px rgba(0,229,255,0.6);
+}
+.building.selected{ border-color: var(--gold); box-shadow:0 0 25px var(--gold); }
+.building .icon{ font-size:28px; }
+.building .lvl{ position:absolute; bottom:-6px; right:-6px; background:var(--gold); color:black; font-size:10px; font-weight:900; padding:2px 6px; border-radius:10px; border:1px solid black; }
+.building .progress{ position:absolute; bottom:-8px; left:4px; right:4px; height:4px; background:#000; border-radius:2px; overflow:hidden; }
+.building .progress-fill{ height:100%; background:linear-gradient(90deg,#7cff6b,#00ff00); }
+
+@keyframes hq-pulse{
+  0%{ box-shadow:0 0 0 0 rgba(0,229,255,0.7), 0 0 30px rgba(0,229,255,0.3); }
+  70%{ box-shadow:0 0 0 20px rgba(0,229,255,0), 0 0 30px rgba(0,229,255,0.3); }
+  100%{ box-shadow:0 0 0 0 rgba(0,229,255,0), 0 0 30px rgba(0,229,255,0.3); }
+}
+@keyframes float{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+@keyframes march{
+  0%{ transform: translateX(-20px); }
+  100%{ transform: translateX(120px); }
+}
+@keyframes resourcePop{
+  0%{ transform: translateY(0) scale(1); opacity:1; }
+  100%{ transform: translateY(-60px) scale(1.5); opacity:0; }
+}
+
+/* TROOPS MARCHING като в снимката долу ляво */
+.troops-field{
+  position:absolute; bottom:90px; left:0; right:0; height:80px;
+  pointer-events:none;
+}
+.troop{ position:absolute; font-size:12px; animation: march 8s linear infinite; }
+
+/* BOTTOM BAR като Camel */
+.bottom-camel{
+  display:grid; grid-template-columns: repeat(5, 1fr);
+  background: linear-gradient(180deg, #1a252c, #0f151a);
+  border-top:2px solid #2a3f4a; padding:6px 0;
+}
+.b-btn{ background:transparent; border:none; color:#8a9a8a; font-size:10px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:2px; position:relative; }
+.b-btn.active{ color:var(--gold); }
+.b-btn .ic{ font-size:22px; }
+.b-btn .badge{ position:absolute; top:-4px; right:12px; background:#ff3b3b; color:white; font-size:9px; padding:1px 5px; border-radius:10px; font-weight:900; animation: float 1s infinite; }
