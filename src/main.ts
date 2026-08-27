@@ -2,31 +2,43 @@ import Phaser from 'phaser'
 
 class City extends Phaser.Scene {
   constructor(){ super('City') }
-  preload(){
-    this.load.image('hq', 'https://i.imgur.com/8Km9tLL.png')
-  }
   create(){
     this.cameras.main.setBackgroundColor('#0a1a0f')
-    const cx = this.scale.width/2
-    const cy = this.scale.height/2
+    const W = this.scale.width
+    const H = this.scale.height
 
-    const hq = this.add.image(cx, cy, 'hq').setScale(0.5)
-    this.tweens.add({ targets: hq, scale: 0.52, yoyo: true, repeat: -1, duration: 1000 })
-
-    this.add.text(cx, 50, '🌽 500 🛢️ 500 - Main Hall Lv.1', {
-      fontSize:'18px', backgroundColor:'#000', padding:{x:10,y:6}
+    // РЕСУРСИ ГОРЕ
+    this.add.text(W/2, 20, '🌽 500 🛢️ 500 - Main Hall Lv.1', {
+      fontSize:'18px', color:'#fff', backgroundColor:'#000', padding:{x:12,y:6}
     }).setOrigin(0.5)
 
-    const farm = this.add.rectangle(cx-150, cy+150, 120, 80, 0x2a5a2a).setInteractive()
-    this.add.text(cx-150, cy+150, '🌾 Farm\n💀 РУИНИ', {fontSize:'12px', align:'center'}).setOrigin(0.5)
+    // HEADQUARTERS В ЦЕНТЪРА - без картинка, само квадрат
+    const hq = this.add.rectangle(W/2, H/2, 140, 140, 0x3a6b4a).setStrokeStyle(4, 0x7cff6b)
+    this.add.text(W/2, H/2, '🏛️\nHQ\nLv.1', {fontSize:'20px', align:'center', color:'#fff'}).setOrigin(0.5)
+    this.tweens.add({targets:hq, scale:1.05, yoyo:true, repeat:-1, duration:900})
+
+    // FARM - В РУИНИ - горе вляво за да се вижда целия
+    const farm = this.add.rectangle(120, 150, 160, 100, 0x2a4a2a).setStrokeStyle(2, 0xff5555).setInteractive()
+    const farmText = this.add.text(120, 150, '🌾 Farm\n💀 РУИНИ', {fontSize:'16px', align:'center', color:'#ffaaaa'}).setOrigin(0.5)
+    this.tweens.add({targets:[farm, farmText], alpha:0.5, yoyo:true, repeat:-1, duration:400})
 
     farm.on('pointerdown', ()=>{
-      farm.setFillStyle(0x7cff6b)
-      this.add.text(cx-150, cy+200, 'Lv.1 400/h', {fontSize:'10px'}).setOrigin(0.5)
+      farm.setFillStyle(0x1a6b1a)
+      farm.setStrokeStyle(3, 0x7cff6b)
+      farmText.setText('🌾 Farm\nLv.1\n400/h')
+      farmText.setColor('#7cff6b')
+      this.tweens.killTweensOf([farm, farmText])
+      farm.setAlpha(1); farmText.setAlpha(1)
+      this.add.text(120, 220, '✅ Построен!', {fontSize:'12px', color:'#7cff6b'}).setOrigin(0.5)
     })
 
-    this.add.text(cx, this.scale.height-40, 'ЦЪКНИ FARM ЗА ДА ИЗЧИСТИШ ЗОМБИТАТА', {
-      fontSize:'14px', color:'#7cff6b', backgroundColor:'#000'
+    // OIL - горе вдясно
+    const oil = this.add.rectangle(W-120, 150, 160, 100, 0x4a3a2a).setStrokeStyle(2, 0xff5555).setInteractive()
+    this.add.text(W-120, 150, '🛢️ Oil\n💀 РУИНИ', {fontSize:'16px', align:'center', color:'#ffaaaa'}).setOrigin(0.5)
+
+    // Инструкция долу
+    this.add.text(W/2, H-40, 'ЦЪКНИ FARM ЗА ДА ИЗЧИСТИШ ЗОМБИТАТА', {
+      fontSize:'16px', color:'#7cff6b', backgroundColor:'#000', padding:{x:8,y:4}
     }).setOrigin(0.5)
   }
 }
@@ -37,5 +49,5 @@ new Phaser.Game({
   width: window.innerWidth,
   height: window.innerHeight,
   scene: [City],
-  scale: { mode: Phaser.Scale.RESIZE }
+  scale: { mode: Phaser.Scale.RESIZE, autoCenter: Phaser.Scale.CENTER_BOTH }
 })
