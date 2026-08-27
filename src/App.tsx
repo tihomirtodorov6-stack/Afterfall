@@ -15,4 +15,4 @@ export default function App() {
       <button style={{marginLeft:"8px", padding:"12px 24px", background:"#1a242f", color:"white", border:"1px solid #2a3a4a"}}>WORLD MAP</button>
     </main>
   );
-}
+} 
