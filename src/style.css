@@ -1,0 +1,1226 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #080b09;
+}
+
+body {
+  margin: 0;
+  background: #080b09;
+  color: #e6eadf;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.afterfall {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      #27352b,
+      #080b09 70%
+    );
+  overflow-x: hidden;
+}
+
+/* TOP */
+
+.topbar {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 14px;
+  background: rgba(8, 11, 9, 0.97);
+  border-bottom: 1px solid #3a443b;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  min-width: 115px;
+}
+
+.brand strong {
+  display: block;
+  letter-spacing: 3px;
+  font-size: 18px;
+}
+
+.brand small {
+  color: #8c9b8d;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+.resources {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.resources::-webkit-scrollbar {
+  display: none;
+}
+
+.resource {
+  min-width: 68px;
+  padding: 7px 8px;
+  background: #151b17;
+  border: 1px solid #343e36;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.resource span {
+  margin-right: 4px;
+}
+
+.city-level {
+  font-size: 9px;
+  color: #89958b;
+  text-align: center;
+}
+
+.city-level b {
+  display: block;
+  font-size: 20px;
+  color: #d9dfd4;
+}
+
+/* CITY */
+
+.city {
+  height: 500px;
+  max-width: 900px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      160deg,
+      #384638,
+      #1e281f
+    );
+
+  border-bottom: 1px solid #485348;
+
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.45);
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 15%,
+      rgba(210, 180, 130, 0.2),
+      transparent 45%
+    );
+}
+
+.city-title {
+  position: absolute;
+  top: 15px;
+  left: 18px;
+  z-index: 20;
+}
+
+.city-title span {
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+.city-title small {
+  color: #aab4a9;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+/* ROADS */
+
+.road {
+  position: absolute;
+  background: #171b18;
+
+  box-shadow:
+    inset 0 0 8px rgba(255,255,255,0.04);
+}
+
+.road.vertical {
+  width: 70px;
+  height: 100%;
+  left: calc(50% - 35px);
+  top: 0;
+}
+
+.road.horizontal {
+  height: 60px;
+  width: 100%;
+  left: 0;
+  top: 57%;
+}
+
+/* BUILDINGS */
+
+.building {
+  position: absolute;
+
+  width: 105px;
+  height: 70px;
+
+  border: 1px solid #697368;
+
+  background: #555950;
+  color: white;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s,
+    filter 0.15s;
+
+  box-shadow:
+    0 8px 14px rgba(0,0,0,0.4);
+
+  z-index: 5;
+}
+
+.building:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.15);
+}
+
+.building.selected {
+  outline: 2px solid #d0a75f;
+  z-index: 30;
+}
+
+/* COMMAND */
+
+.building.command {
+  left: calc(50% - 65px);
+  top: 185px;
+
+  width: 130px;
+  height: 105px;
+
+  z-index: 15;
+}
+
+/* TOP BUILDINGS */
+
+.building.farm {
+  left: 4%;
+  top: 100px;
+}
+
+.building.metal {
+  right: 4%;
+  top: 100px;
+}
+
+.building.vehicle {
+  left: 25%;
+  top: 95px;
+}
+
+.building.weapons {
+  right: 25%;
+  top: 95px;
+}
+
+/* MIDDLE */
+
+.building.refinery {
+  left: 4%;
+  top: 235px;
+}
+
+.building.powerplant {
+  right: 4%;
+  top: 235px;
+}
+
+/* BOTTOM */
+
+.building.barracks {
+  left: 7%;
+  bottom: 30px;
+}
+
+.building.hospital {
+  right: 7%;
+  bottom: 30px;
+}
+
+.building.research {
+  left: 29%;
+  bottom: 18px;
+}
+
+.building.warehouse {
+  right: 29%;
+  bottom: 18px;
+}
+
+/* BUILDING BODY */
+
+.building-body {
+  position: absolute;
+  inset: 14px 7px 7px;
+
+  background:
+    linear-gradient(
+      160deg,
+      #77786f,
+      #41433e
+    );
+
+  border: 1px solid #292d29;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+}
+
+.building-roof {
+  position: absolute;
+
+  left: -4px;
+  right: -4px;
+
+  top: 4px;
+
+  height: 15px;
+
+  background: #292d29;
+
+  transform: skewX(-18deg);
+}
+
+.building-icon {
+  font-size: 23px;
+}
+
+.building-name {
+  font-size: 7px;
+  font-weight: bold;
+  margin-top: 2px;
+  letter-spacing: .4px;
+}
+
+.building-lvl {
+  color: #d8b36e;
+  font-size: 8px;
+  margin-top: 2px;
+}
+
+/* BUILDING TYPES */
+
+.building.refinery .building-body {
+  background:
+    linear-gradient(
+      160deg,
+      #665b48,
+      #39362f
+    );
+}
+
+.building.powerplant .building-body {
+  background:
+    linear-gradient(
+      160deg,
+      #555f61,
+      #303738
+    );
+}
+
+.building.vehicle .building-body {
+  background:
+    linear-gradient(
+      160deg,
+      #59605b,
+      #303630
+    );
+}
+
+.building.weapons .building-body {
+  background:
+    linear-gradient(
+      160deg,
+      #625650,
+      #322d2a
+    );
+}
+
+.smoke {
+  position: absolute;
+
+  right: 8px;
+  top: -17px;
+
+  color: #b4b7af;
+
+  font-size: 30px;
+
+  animation:
+    smoke 2s infinite;
+}
+
+@keyframes smoke {
+
+  0% {
+    opacity: .1;
+    transform: translateY(8px);
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+.trees {
+  position: absolute;
+
+  bottom: 4px;
+  left: 5px;
+
+  font-size: 24px;
+
+  opacity: .55;
+
+  pointer-events: none;
+}
+
+/* NAVIGATION */
+
+.bottom-nav {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  max-width: 900px;
+  margin: auto;
+
+  background: #0c100d;
+
+  border-bottom:
+    1px solid #323a33;
+}
+
+.nav-button {
+  border: 0;
+  border-right: 1px solid #2b322d;
+
+  padding: 11px 4px;
+
+  background: transparent;
+
+  color: #777f78;
+
+  font-size: 9px;
+
+  cursor: pointer;
+}
+
+.nav-button span {
+  display: block;
+
+  font-size: 20px;
+
+  margin-bottom: 3px;
+}
+
+.nav-button.active {
+  color: #e3c27c;
+  background: #171d18;
+}
+
+/* PANEL */
+
+.panel {
+  max-width: 900px;
+  margin: auto;
+
+  padding: 15px;
+
+  background: #0d120f;
+
+  min-height: 400px;
+}
+
+.message {
+  background: #171e19;
+
+  border-left:
+    3px solid #b38b4f;
+
+  padding: 9px;
+
+  color: #aeb8ad;
+
+  font-size: 12px;
+
+  margin-bottom: 15px;
+}
+
+.panel h2 {
+  margin: 0 0 6px;
+
+  letter-spacing: 1px;
+}
+
+.panel p {
+  color: #89958b;
+  font-size: 13px;
+}
+
+/* BUILDING PANEL */
+
+.panel-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.panel-heading > span {
+  font-size: 38px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+}
+
+.panel-heading small {
+  color: #d0a75f;
+}
+
+.production {
+  padding: 10px;
+
+  background: #151c17;
+
+  margin: 12px 0;
+
+  color: #8dc58d;
+
+  border:
+    1px solid #303b31;
+}
+
+.cost {
+  display: flex;
+
+  gap: 15px;
+
+  margin: 10px 0;
+
+  font-size: 13px;
+
+  color: #d2b578;
+}
+
+.main-button,
+.attack-button,
+.secondary-button {
+  border:
+    1px solid #80633b;
+
+  background: #42351f;
+
+  color: #ead5a3;
+
+  padding: 11px 18px;
+
+  border-radius: 4px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
+
+.main-button {
+  width: 100%;
+}
+
+.main-button:disabled,
+.attack-button:disabled,
+.train-buttons button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.warning {
+  display: block;
+
+  color: #c7836b;
+
+  text-align: center;
+
+  margin-top: 8px;
+}
+
+/* CITY STATS */
+
+.city-stats,
+.battle-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.city-stats div,
+.battle-stats div {
+  background: #151c17;
+
+  padding: 14px 8px;
+
+  text-align: center;
+
+  border:
+    1px solid #29332c;
+}
+
+.city-stats b,
+.battle-stats b {
+  display: block;
+
+  font-size: 22px;
+}
+
+.city-stats span,
+.battle-stats span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #778278;
+
+  font-size: 8px;
+}
+
+/* ARMY */
+
+.army-header {
+  display: grid;
+
+  grid-template-columns:
+    1fr 90px 90px;
+
+  gap: 8px;
+
+  align-items: center;
+}
+
+.army-header h2 {
+  margin-bottom: 2px;
+}
+
+.army-header span {
+  color: #768077;
+  font-size: 9px;
+}
+
+.power {
+  background: #151c17;
+
+  padding: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.power small {
+  display: block;
+
+  font-size: 7px;
+
+  color: #748077;
+
+  margin-top: 4px;
+}
+
+.army-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(135px, 1fr)
+    );
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.unit-card {
+  background: #151c17;
+
+  border:
+    1px solid #303b31;
+
+  padding: 10px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.unit-card.locked {
+  opacity: .45;
+}
+
+.unit-icon {
+  font-size: 25px;
+}
+
+.unit-card strong {
+  font-size: 22px;
+}
+
+.unit-card small {
+  color: #829084;
+  font-size: 10px;
+}
+
+.unit-card em {
+  font-size: 9px;
+  color: #b27f62;
+}
+
+.train-buttons {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 3px;
+
+  margin-top: 4px;
+}
+
+.train-buttons button {
+  border:
+    1px solid #4c594e;
+
+  background: #202920;
+
+  color: #cdd5ca;
+
+  padding: 6px 2px;
+
+  cursor: pointer;
+}
+
+/* TRAINING */
+
+.training {
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background: #1b241d;
+
+  border:
+    1px solid #526052;
+}
+
+.training span {
+  float: right;
+
+  color: #d5b56e;
+}
+
+.progress {
+  height: 7px;
+
+  margin-top: 10px;
+
+  background: #080b09;
+}
+
+.progress div {
+  height: 100%;
+
+  background: #9b793f;
+
+  transition:
+    width .5s;
+}
+
+.training small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #8b958b;
+}
+
+/* RESEARCH */
+
+.research-grid {
+  display: grid;
+
+  gap: 9px;
+
+  margin-top: 15px;
+}
+
+.research-card {
+  display: grid;
+
+  grid-template-columns:
+    45px 1fr 90px;
+
+  gap: 10px;
+
+  align-items: center;
+
+  background: #151c17;
+
+  border:
+    1px solid #303b31;
+
+  padding: 10px;
+}
+
+.research-icon {
+  font-size: 28px;
+  text-align: center;
+}
+
+.research-card b {
+  display: block;
+}
+
+.research-card small {
+  display: block;
+
+  color: #d0a75f;
+
+  font-size: 9px;
+
+  margin-top: 3px;
+}
+
+.research-card p {
+  margin: 5px 0 0;
+
+  font-size: 10px;
+}
+
+.research-card .cost {
+  display: block;
+
+  margin: 0;
+
+  line-height: 1.7;
+}
+
+/* WAR */
+
+.enemy {
+  display: grid;
+
+  grid-template-columns:
+    60px 1fr 80px;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 15px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #211c18,
+      #161915
+    );
+
+  border:
+    1px solid #493c2b;
+
+  margin-top: 15px;
+}
+
+.enemy-icon {
+  font-size: 40px;
+  text-align: center;
+}
+
+.enemy h3 {
+  margin: 0;
+
+  font-size: 13px;
+}
+
+.enemy span {
+  color: #777f78;
+
+  font-size: 8px;
+}
+
+.enemy-power {
+  text-align: center;
+
+  color: #d4a96b;
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+.enemy-power small {
+  display: block;
+
+  color: #777f78;
+
+  font-size: 7px;
+}
+
+.war-buttons {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.secondary-button,
+.attack-button {
+  min-height: 55px;
+}
+
+.secondary-button small {
+  display: block;
+
+  font-size: 8px;
+
+  margin-top: 3px;
+
+  color: #99876b;
+}
+
+.attack-button {
+  background: #4a2722;
+
+  border-color: #8c493e;
+
+  color: #e8b0a4;
+}
+
+.battle-report {
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background: #151c17;
+
+  border:
+    1px solid #303b31;
+}
+
+.battle-report h3 {
+  margin: 0;
+
+  font-size: 11px;
+
+  color: #d0a75f;
+}
+
+.battle-report p {
+  margin-bottom: 0;
+}
+
+/* RESET */
+
+.reset {
+  margin-top: 25px;
+
+  background: transparent;
+
+  border:
+    1px solid #3b403c;
+
+  color: #656d66;
+
+  padding: 7px 12px;
+
+  font-size: 8px;
+
+  cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .topbar {
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .brand {
+    min-width: 76px;
+  }
+
+  .brand strong {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .brand small {
+    font-size: 6px;
+  }
+
+  .resources {
+    gap: 3px;
+  }
+
+  .resource {
+    min-width: 52px;
+    padding: 6px 5px;
+    font-size: 9px;
+  }
+
+  .city-level {
+    min-width: 38px;
+  }
+
+  .city-level b {
+    font-size: 17px;
+  }
+
+  /* CITY */
+
+  .city {
+    height: 455px;
+  }
+
+  .city-title {
+    top: 10px;
+    left: 10px;
+  }
+
+  .city-title span {
+    font-size: 16px;
+  }
+
+  .city-title small {
+    font-size: 6px;
+  }
+
+  .road.vertical {
+    width: 54px;
+    left: calc(50% - 27px);
+  }
+
+  .road.horizontal {
+    height: 48px;
+  }
+
+  .building {
+    width: 76px;
+    height: 58px;
+  }
+
+  .building.command {
+    width: 98px;
+    height: 82px;
+
+    left: calc(50% - 49px);
+
+    top: 170px;
+  }
+
+  .building.farm {
+    left: 1%;
+    top: 78px;
+  }
+
+  .building.metal {
+    right: 1%;
+    top: 78px;
+  }
+
+  .building.vehicle {
+    left: 21%;
+    top: 77px;
+  }
+
+  .building.weapons {
+    right: 21%;
+    top: 77px;
+  }
+
+  .building.refinery {
+    left: 1%;
+    top: 220px;
+  }
+
+  .building.powerplant {
+    right: 1%;
+    top: 220px;
+  }
+
+  .building.barracks {
+    left: 2%;
+    bottom: 25px;
+  }
+
+  .building.hospital {
+    right: 2%;
+    bottom: 25px;
+  }
+
+  .building.research {
+    left: 22%;
+    bottom: 18px;
+  }
+
+  .building.warehouse {
+    right: 22%;
+    bottom: 18px;
+  }
+
+  .building-icon {
+    font-size: 17px;
+  }
+
+  .building-name {
+    font-size: 5.5px;
+  }
+
+  .building-lvl {
+    font-size: 7px;
+  }
+
+  /* PANEL */
+
+  .panel {
+    padding: 11px;
+  }
+
+  .city-stats,
+  .battle-stats {
+    gap: 4px;
+  }
+
+  .city-stats div,
+  .battle-stats div {
+    padding: 10px 4px;
+  }
+
+  .city-stats b,
+  .battle-stats b {
+    font-size: 18px;
+  }
+
+  /* ARMY */
+
+  .army-header {
+    grid-template-columns:
+      1fr 70px 70px;
+  }
+
+  .power {
+    padding: 7px 3px;
+    font-size: 11px;
+  }
+
+  .army-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .unit-card {
+    padding: 8px;
+  }
+
+  .unit-icon {
+    font-size: 21px;
+  }
+
+  .unit-card strong {
+    font-size: 19px;
+  }
+
+  /* RESEARCH */
+
+  .research-card {
+    grid-template-columns:
+      40px 1fr;
+  }
+
+  .research-card .cost,
+  .research-card button {
+    grid-column: 2;
+  }
+
+  /* WAR */
+
+  .enemy {
+    grid-template-columns:
+      48px 1fr 65px;
+
+    padding: 10px;
+  }
+
+  .enemy-icon {
+    font-size: 30px;
+  }
+
+  .enemy-power {
+    font-size: 16px;
+  }
+
+  .war-buttons {
+    grid-template-columns:
+      1fr 1fr;
+  }
+}
