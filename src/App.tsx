@@ -66,4 +66,4 @@ train(t, 1)}>+1train(t, 5)}>+5train(t, 10)}>+10
 { if (game.resources.fuel < 30) { setMsg("ÐÑƒÐ¶Ð½Ð¸ 30 Fuel"); return; } setGame(c => ({ ...c, resources: { ...c.resources, fuel: c.resources.fuel - 30 }, enemyScouted: true })); setMsg(`Ð’Ñ€Ð°Ð³: ${game.enemyStrength} Power`); }}>ðŸ›°ï¸ SCOUT (30 Fuel){ const won = armyPower.attack * (0.85 + Math.random() * 0.3) >= game.enemyStrength; setGame(c => ({ ...c, enemyStrength: Math.floor(c.enemyStrength * (won ? 1.12 : 1.05)), enemyScouted: false, battleReport: won ? `ÐŸÐžÐ‘Ð•Ð”Ð! ÐŸÐ»ÑÑ‡ÐºÐ°: 500 Food` : `Ð—ÐÐ“Ð£Ð‘Ð!` })); setMsg(won ? "ÐŸÐžÐ‘Ð•Ð”Ð!" : "Ð—ÐÐ“Ð£Ð‘Ð!"); }}>âš”ï¸ ATTACK
 )}  { localStorage.removeItem(SAVE_KEY); location.reload(); }}>RESET
 ðŸ“œQuest 2  ðŸŽ’Bag  âœ‰ï¸Mail 31  â­Alliance 24  ðŸ‘¤My Info
-); }
+); } 
