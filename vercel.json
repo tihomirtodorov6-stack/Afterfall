@@ -1,9 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/sofia", "destination": "/index.html" },
-    { "source": "/varna", "destination": "/index.html" },
-    { "source": "/burgas", "destination": "/index.html" },
-    { "source": "/plovdiv", "destination": "/index.html" }
-  ]
-}
