@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://afterfall-eta.vercel.app/sitemap.xml
+Sitemap: https://afterfall-navy.vercel.app/sitemap.xml
