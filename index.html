@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letishta.bg 2026 €</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0B57D0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}
+body{background:#f5f6f8;color:#111}
+header{background:#fff;padding:10px 12px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30}
+.lang button{padding:6px 7px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:800;font-size:10px}
+.lang button.active{background:#0B57D0;color:#fff}
+.grid{max-width:900px;margin:0 auto;padding:0 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px;cursor:pointer}
+#detail{display:none;max-width:900px;margin:0 auto;padding:10px}
+.term-card{background:#fff;border-radius:18px;border:1px solid #e5e7eb;margin-bottom:14px;overflow:hidden}
+.term-head{padding:12px 14px;color:#fff;display:flex;justify-content:space-between}
+.term-body{padding:14px;line-height:1.6;font-size:13.5px}
+.row{display:flex;justify-content:space-between;border-bottom:1px solid #f2f2f2;padding:7px 0;font-size:13px}
+.map-btn{display:block;background:#0B57D0;color:#fff;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:800;margin-top:8px}
+.map-btn2{display:block;background:#fff;color:#111;border:1px solid #ddd;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:800;margin-top:6px}
+.badge{background:#ecfdf5;color:#059669;padding:4px 8px;border-radius:20px;font-weight:800;font-size:11px}
+</style>
+</head>
+<body>
+<header><a href="/" style="color:#0B57D0;font-weight:800;text-decoration:none">Letishta.bg</a>
+<div class="lang">
+<button onclick="setLang('bg')" id="b-bg" class="active">BG</button>
+<button onclick="setLang('en')" id="b-en">EN</button>
+<button onclick="setLang('de')" id="b-de">DE</button>
+<button onclick="setLang('ro')" id="b-ro">RO</button>
+<button onclick="setLang('tr')" id="b-tr">TR</button>
+<button onclick="setLang('gr')" id="b-gr">GR</button>
+</div></header>
+
+<div id="home"><div style="max-width:900px;margin:0 auto;padding:14px"><h1 id="h1" style="font-size:20px"></h1><p id="sub" style="font-size:12px;color:#666;margin-top:4px"></p></div><div class="grid" id="list"></div></div>
+<div id="detail"></div>
+
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
+
+let L='bg';
+let currentAirport=null;
+
+const UI={
+bg:{title:"Летища България 2026 - Всичко в ЕВРО €",sub:"София Т1/Т2 отделно с карти, паркинги, Drop Off - Варна, Бургас, Пловдив",back:"← Назад",map:"📍 Карта",nav:"🧭 Навигация Drop Off",free:"БЕЗПЛАТНО",term1:"ТЕРМИНАЛ 1",term2:"ТЕРМИНАЛ 2 - Нов (90% полети)",drop:"Drop Off / Kiss & Ride",park:"Паркинги",tip:"Съвет"},
+en:{title:"Bulgaria Airports 2026 - All in EURO €",sub:"Sofia T1/T2 separate with maps, parkings, Drop Off - Varna, Burgas, Plovdiv",back:"← Back",map:"📍 Map",nav:"🧭 Navigation Drop Off",free:"FREE",term1:"TERMINAL 1",term2:"TERMINAL 2 - New (90% flights)",drop:"Drop Off / Kiss & Ride",park:"Parkings",tip:"Tip"},
+de:{title:"Flughäfen Bulgarien 2026 - Alles in EURO €",sub:"Sofia T1/T2 getrennt mit Karten, Parkplätze, Drop Off",back:"← Zurück",map:"📍 Karte",nav:"🧭 Navigation Drop Off",free:"KOSTENLOS",term1:"TERMINAL 1",term2:"TERMINAL 2 - Neu",drop:"Drop Off / Kiss & Ride",park:"Parkplätze",tip:"Tipp"},
+ro:{title:"Aeroporturi Bulgaria 2026 - Tot în EURO €",sub:"Sofia T1/T2 separat cu hărți, parcări, Drop Off",back:"← Înapoi",map:"📍 Hartă",nav:"🧭 Navigare Drop Off",free:"GRATUIT",term1:"TERMINAL 1",term2:"TERMINAL 2 - Nou",drop:"Drop Off / Kiss & Ride",park:"Parcări",tip:"Sfat"},
+tr:{title:"Bulgaristan Havalimanları 2026 - Hepsi EURO €",sub:"Sofya T1/T2 ayrı haritalar, otoparklar, Drop Off",back:"← Geri",map:"📍 Harita",nav:"🧭 Navigasyon Drop Off",free:"ÜCRETSİZ",term1:"TERMİNAL 1",term2:"TERMİNAL 2 - Yeni",drop:"Drop Off / Kiss & Ride",park:"Otoparklar",tip:"İpucu"},
+gr:{title:"Αεροδρόμια Βουλγαρίας 2026 - Όλα σε ΕΥΡΩ €",sub:"Σόφια Τ1/Τ2 ξεχωριστά με χάρτες, πάρκινγκ, Drop Off",back:"← Πίσω",map:"📍 Χάρτης",nav:"🧭 Πλοήγηση Drop Off",free:"ΔΩΡΕΑΝ",term1:"ΤΕΡΜΙΝΑΛ 1",term2:"ΤΕΡΜΙΝΑΛ 2 - Νέο",drop:"Drop Off / Kiss & Ride",park:"Πάρκινγκ",tip:"Συμβουλή"}
+};
+
+const AIR={
+sof:{code:"SOF",names:{bg:"Летище София",en:"Sofia Airport",de:"Flughafen Sofia",ro:"Aeroport Sofia",tr:"Sofya Havalimanı",gr:"Αεροδρόμιο Σόφιας"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+var:{code:"VAR",names:{bg:"Летище Варна",en:"Varna Airport",de:"Flughafen Varna",ro:"Aeroport Varna",tr:"Varna Havalimanı",gr:"Αεροδρόμιο Βάρνας"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+boj:{code:"BOJ",names:{bg:"Летище Бургас",en:"Burgas Airport",de:"Flughafen Burgas",ro:"Aeroport Burgas",tr:"Burgaz Havalimanı",gr:"Αεροδρόμιο Μπουργκάς"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+pdv:{code:"PDV",names:{bg:"Летище Пловдив",en:"Plovdiv Airport",de:"Flughafen Plovdiv",ro:"Aeroport Plovdiv",tr:"Filibe Havalimanı",gr:"Αεροδρόμιο Φιλιππούπολης"},free:{bg:"15 мин БЕЗПЛАТНО",en:"15 min FREE",de:"15 Min KOSTENLOS",ro:"15 min GRATUIT",tr:"15 dk ÜCRETSİZ",gr:"15 λεπτά ΔΩΡΕΑΝ"}}
+};
+
+function getDetail(id){
+const u=UI[L];
+if(id==='sof'){
+const d={
+bg:{t1who:"Wizz Air, Ryanair, чартъри",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian, LOT, British, Air France - 90% полети",addr1:"Искърско шосе 7",addr2:"Хр. Колумб 1 + Метро М4 до Т2",prices:"0-10 мин: 0,00 € БЕЗПЛАТНО | 10-30: 2,56€ | 30-60: 5,11€ | 1ч+: 3,07€/ч",tip:"Посрещаш? Паркирай P4 за 2,05€ и чакай вътре. Не в Kiss & Ride - камери глобяват!"},
+en:{t1who:"Wizz Air, Ryanair, charters",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian, LOT, British, Air France - 90% flights",addr1:"Iskarsko shose 7",addr2:"Hristofor Kolumb 1 + Metro M4 to T2",prices:"0-10 min: 0.00 € FREE | 10-30: 2.56€ | 30-60: 5.11€ | 1h+: 3.07€/h",tip:"Picking up? Park P4 for 2.05€ and wait inside. Not in Kiss & Ride - cameras fine!"},
+de:{t1who:"Wizz Air, Ryanair, Charter",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian - 90% Flüge",addr1:"Iskarsko shose 7",addr2:"Hristofor Kolumb 1 + Metro M4 zu T2",prices:"0-10 Min: 0,00 € KOSTENLOS | 10-30: 2,56€ | 30-60: 5,11€",tip:"Abholung? Parke P4 für 2,05€ und warte drinnen. Nicht im Kiss & Ride!"},
+ro:{t1who:"Wizz Air, Ryanair, charter",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian - 90% zboruri",addr1:"Iskarsko shose 7",addr2:"Hristofor Kolumb 1 + Metrou M4 la T2",prices:"0-10 min: 0,00 € GRATUIT | 10-30: 2,56€ | 30-60: 5,11€",tip:"Aștepți? Parchează P4 cu 2,05€ și așteaptă înăuntru. Nu în Kiss & Ride!"},
+tr:{t1who:"Wizz Air, Ryanair, charter",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian - %90 uçuş",addr1:"Iskarsko shose 7",addr2:"Hristofor Kolumb 1 + Metro M4 T2'ye",prices:"0-10 dk: 0,00 € ÜCRETSİZ | 10-30: 2,56€ | 30-60: 5,11€",tip:"Karşılama? P4'e park et 2,05€ ve içeride bekle. Kiss & Ride'de değil!"},
+gr:{t1who:"Wizz Air, Ryanair, charter",t2who:"Bulgaria Air, Lufthansa, Turkish, Austrian - 90% πτήσεις",addr1:"Iskarsko shose 7",addr2:"Hristofor Kolumb 1 + Μετρό Μ4 προς Τ2",prices:"0-10 λεπτά: 0,00 € ΔΩΡΕΑΝ | 10-30: 2,56€ | 30-60: 5,11€",tip:"Παραλαβή? Παρκάρετε P4 με 2,05€ και περιμένετε μέσα. Όχι στο Kiss & Ride!"}
+}[L];
+return `
+<div style="padding:10px"><button onclick="back()" style="padding:8px 14px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700">${u.back}</button>
+<h1 style="margin-top:10px">${AIR[id].names[L]} (${AIR[id].code})</h1><p style="color:#059669;font-weight:800">2026 ${u.free} - All in EURO €</p></div>
+
+<div class="term-card"><div class="term-head" style="background:#1f2937"><b>🅰️ ${u.term1} - Old</b><span class="badge">${AIR[id].free[L]}</span></div>
+<div class="term-body">
+<b>${d.t1who}</b><br>${d.addr1}<br><br>
+<b>${u.drop} T1:</b> Lane in front, barrier ticket.<br>
+<div style="background:#f0fdf4;padding:8px;border-radius:10px;margin:6px 0">${d.prices}</div>
+<b>${u.park} T1:</b>
+<div class="row"><span>P1 - next to T1</span><b>2,56€/h - 12,78€/day</b></div>
+<div class="row"><span>P2 - economy</span><b>1,53€/h - 7,67€/day</b></div>
+<a class="map-btn" href="https://www.google.com/maps/search/Sofia+Airport+Terminal+1" target="_blank">${u.map} T1</a>
+<a class="map-btn2" href="https://www.google.com/maps/dir//Sofia+Airport+Terminal+1" target="_blank">${u.nav} T1</a>
+<iframe style="width:100%;height:200px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Sofia%20Airport%20Terminal%201&t=&z=15&output=embed"></iframe>
+</div></div>
+
+<div class="term-card"><div class="term-head" style="background:#0B57D0"><b>🅱️ ${u.term2}</b><span class="badge" style="background:#fff">${AIR[id].free[L]}</span></div>
+<div class="term-body">
+<b>${d.t2who}</b><br>${d.addr2}<br><br>
+<b>${u.drop} T2 - MAIN:</b> 2 lanes in front of Departures.<br>
+<div style="background:#f0fdf4;padding:8px;border-radius:10px;margin:6px 0">${d.prices}</div>
+<b>${u.park} T2:</b>
+<div class="row"><span>P3 Premium (30 sec)</span><b>3,58€/h - 20,45€/day</b></div>
+<div class="row"><span>P4 Economy covered (2 min) - MOST USED</span><b>2,05€/h - 10,23€/day</b></div>
+<div class="row"><span>P5 Long term</span><b>1,53€/h - 7,67€/day</b></div>
+<div class="row"><span>P6 Cheapest long term</span><b>1,02€/h - 5,11€/day</b></div>
+<div style="background:#fef3c7;padding:8px;border-radius:10px;margin-top:8px"><b>💡 ${u.tip}:</b> ${d.tip}</div>
+<a class="map-btn" href="https://www.google.com/maps/search/Sofia+Airport+Terminal+2" target="_blank">${u.map} T2</a>
+<a class="map-btn2" href="https://www.google.com/maps/dir//Sofia+Airport+Terminal+2" target="_blank">${u.nav} T2 - Kiss & Ride</a>
+<iframe style="width:100%;height:220px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Sofia%20Airport%20Terminal%202&t=&z=15&output=embed"></iframe>
+</div></div>
+`;
+}
+if(id==='var'){
+const d={
+bg:{prices:"0-10 мин: 0,00 € | 10-30: 2,05€ | 30-60: 4,09€",park:"P1 2,56€/ч - 12,78€/ден, P2 1,53€/ч",tip:"Лятото 1 км опашка! Ела 2.5ч по-рано"},
+en:{prices:"0-10 min: 0.00 € | 10-30: 2.05€ | 30-60: 4.09€",park:"P1 2.56€/h - 12.78€/day, P2 1.53€/h",tip:"Summer 1km queue! Come 2.5h early"},
+de:{prices:"0-10 Min: 0,00 € | 10-30: 2,05€ | 30-60: 4,09€",park:"P1 2,56€/h, P2 1,53€/h",tip:"Im Sommer 1km Schlange! 2,5h früher kommen"},
+ro:{prices:"0-10 min: 0,00 € | 10-30: 2,05€ | 30-60: 4,09€",park:"P1 2,56€/h, P2 1,53€/h",tip:"Vara coadă 1km! Vino cu 2.5h înainte"},
+tr:{prices:"0-10 dk: 0,00 € | 10-30: 2,05€ | 30-60: 4,09€",park:"P1 2,56€/saat, P2 1,53€",tip:"Yazın 1km kuyruk! 2.5 saat erken gel"},
+gr:{prices:"0-10 λεπτά: 0,00 € | 10-30: 2,05€ | 30-60: 4,09€",park:"P1 2,56€/ώρα, P2 1,53€",tip:"Το καλοκαίρι ουρά 1km! Ελάτε 2.5h νωρίτερα"}
+}[L];
+return `<div style="padding:10px"><button onclick="back()" style="padding:8px 14px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700">${u.back}</button><h1>${AIR[id].names[L]}</h1></div>
+<div class="term-card"><div class="term-head" style="background:#059669"><b>🛫 VAR - 1 Terminal</b><span class="badge">${AIR[id].free[L]}</span></div><div class="term-body"><div style="background:#f0fdf4;padding:8px;border-radius:10px">${d.prices}</div><div class="row"><span>${d.park}</span></div><div style="background:#fef3c7;padding:8px;border-radius:10px;margin-top:8px"><b>${u.tip}:</b> ${d.tip}</div><a class="map-btn" href="https://www.google.com/maps/search/Varna+Airport" target="_blank">${u.map} VAR</a><a class="map-btn2" href="https://www.google.com/maps/dir//Varna+Airport" target="_blank">${u.nav} VAR</a><iframe style="width:100%;height:220px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Varna%20Airport&z=14&output=embed"></iframe></div></div>`;
+}
+if(id==='boj'){
+const d={
+bg:{prices:"0-10 мин: 0,00 € | 10-30: 2,56€ | 30-60: 5,11€",tip:"Лятото полиция гони - само бързо слизане!"},
+en:{prices:"0-10 min: 0.00 € | 10-30: 2.56€ | 30-60: 5.11€",tip:"Summer police chases - only quick drop!"},
+de:{prices:"0-10 Min: 0,00 € | 10-30: 2,56€",tip:"Im Sommer Polizei - nur schneller Ausstieg!"},
+ro:{prices:"0-10 min: 0,00 € | 10-30: 2,56€",tip:"Vara poliția alungă - doar oprire rapidă!"},
+tr:{prices:"0-10 dk: 0,00 € | 10-30: 2,56€",tip:"Yazın polis kovalıyor - sadece hızlı bırak!"},
+gr:{prices:"0-10 λεπτά: 0,00 € | 10-30: 2,56€",tip:"Το καλοκαίρι η αστυνομία διώχνει - μόνο γρήγορα!"}
+}[L];
+return `<div style="padding:10px"><button onclick="back()" style="padding:8px 14px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700">${u.back}</button><h1>${AIR[id].names[L]}</h1></div><div class="term-card"><div class="term-head" style="background:#ea580c"><b>🛫 BOJ Burgas - Seasonal</b><span class="badge">${AIR[id].free[L]}</span></div><div class="term-body"><div style="background:#f0fdf4;padding:8px;border-radius:10px">${d.prices}</div><div style="background:#fee2e2;padding:8px;border-radius:10px;margin-top:8px"><b>${u.tip}:</b> ${d.tip}</div><a class="map-btn" href="https://www.google.com/maps/search/Burgas+Airport" target="_blank">${u.map} BOJ</a><a class="map-btn2" href="https://www.google.com/maps/dir//Burgas+Airport" target="_blank">${u.nav} BOJ</a><iframe style="width:100%;height:220px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Burgas%20Airport&z=14&output=embed"></iframe></div></div>`;
+}
+if(id==='pdv'){
+const d={
+bg:{prices:"0-15 мин: 0,00 € БЕЗПЛАТНО | 15-30: 1,53€ | 30-60: 3,07€",tip:"Най-спокойно! 15 мин безплатно, най-евтин паркинг 1,02€/ч"},
+en:{prices:"0-15 min: 0.00 € FREE | 15-30: 1.53€ | 30-60: 3.07€",tip:"Calmest! 15 min free, cheapest parking 1.02€/h"},
+de:{prices:"0-15 Min: 0,00 € KOSTENLOS | 15-30: 1,53€",tip:"Am ruhigsten! 15 Min kostenlos, günstigstes Parken 1,02€/h"},
+ro:{prices:"0-15 min: 0,00 € GRATUIT | 15-30: 1,53€",tip:"Cel mai liniștit! 15 min gratuit, parcare ieftină 1,02€/h"},
+tr:{prices:"0-15 dk: 0,00 € ÜCRETSİZ | 15-30: 1,53€",tip:"En sakin! 15 dk ücretsiz, en ucuz otopark 1,02€/saat"},
+gr:{prices:"0-15 λεπτά: 0,00 € ΔΩΡΕΑΝ | 15-30: 1,53€",tip:"Πιο ήσυχο! 15 λεπτά δωρεάν, φθηνότερο πάρκινγκ 1,02€/ώρα"}
+}[L];
+return `<div style="padding:10px"><button onclick="back()" style="padding:8px 14px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700">${u.back}</button><h1>${AIR[id].names[L]}</h1></div><div class="term-card"><div class="term-head" style="background:#7c3aed"><b>🛫 PDV Plovdiv - 15 min FREE!</b><span class="badge">${AIR[id].free[L]}</span></div><div class="term-body"><div style="background:#f0fdf4;padding:8px;border-radius:10px">${d.prices}</div><div style="background:#d1fae5;padding:8px;border-radius:10px;margin-top:8px"><b>${u.tip}:</b> ${d.tip}</div><a class="map-btn" href="https://www.google.com/maps/search/Plovdiv+Airport" target="_blank">${u.map} PDV</a><a class="map-btn2" href="https://www.google.com/maps/dir//Plovdiv+Airport" target="_blank">${u.nav} PDV</a><iframe style="width:100%;height:220px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Plovdiv%20Airport&z=14&output=embed"></iframe></div></div>`;
+}
+}
+
+const list=document.getElementById('list'),home=document.getElementById('home'),detail=document.getElementById('detail');
+function renderHome(){
+document.getElementById('h1').innerText=UI[L].title;
+document.getElementById('sub').innerText=UI[L].sub;
+list.innerHTML="";
+Object.keys(AIR).forEach(id=>{
+const a=AIR[id];
+const d=document.createElement('div');d.className='card';
+d.innerHTML=`<b>${a.code}</b><h4 style="margin:5px 0;font-size:14px">${a.names[L]}</h4><span class="badge">${a.free[L]}</span><div style="font-size:11px;color:#0B57D0;margin-top:6px;font-weight:700">→ ${UI[L].term1} + ${UI[L].term2} + €</div>`;
+d.onclick=()=>{currentAirport=id;show(id);};
+list.appendChild(d);
+});
+if(currentAirport){show(currentAirport);}
+}
+function show(id){currentAirport=id;home.style.display='none';detail.style.display='block';window.scrollTo(0,0);detail.innerHTML=getDetail(id);}
+function back(){detail.style.display='none';home.style.display='block';currentAirport=null;}
+function setLang(l){L=l;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+l).classList.add('active');renderHome();}
+renderHome();
+</script>
+</body>
+</html>
