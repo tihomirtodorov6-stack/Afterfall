@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Летища България - Kiss & Ride 2026</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0B57D0">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3774/3774080.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Letishta.bg">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{background:#f8f9fb;color:#111}
@@ -31,6 +37,7 @@ footer{text-align:center;padding:30px;color:#777;font-size:12px}
 <div id="detail"></div>
 <footer>© 2026 Letishta.bg - Неофициален сайт | Като dropoffpay.co.uk за БГ</footer>
 <script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
 const airports=[
 {id:"sof",name:"Летище София",code:"SOF",city:"София",free:"10 мин безплатно",price:"5 лв / час след това",p1:"P1 Краткосрочен Т2 - 5 лв/ч",p2:"P2 Многоетажен - 35 лв/ден",p3:"Частен FlyPark - от 12 лв/ден с трансфер"},
 {id:"var",name:"Летище Варна",code:"VAR",city:"Варна",free:"10 мин безплатно",price:"3 лв / 30 мин след това",p1:"P1 - 3 лв/30мин / 6 лв/ч",p2:"P2 Дългосрочен - 25 лв/ден",p3:"На бариера - кеш/карта"},
