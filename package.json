@@ -1,9 +1,0 @@
-{
-  "name": "afterfall",
-  "private": true,
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": { "dev": "vite", "build": "vite build" },
-  "dependencies": { "phaser": "^3.80.1" },
-  "devDependencies": { "vite": "^5.0.0", "typescript": "^5.3.0" }
-}
