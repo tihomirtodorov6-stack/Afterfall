@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://afterfall-eta.vercel.app/sitemap.xml
