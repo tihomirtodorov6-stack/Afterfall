@@ -1,10 +1,15 @@
-<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Terms - dropoffpay-bg.com</title>
-<style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:20px;line-height:1.7}</style></head><body>
-<h1>Terms & Conditions - DROPOFFPAY-BG.COM</h1>
-<p>Last updated: 2026</p>
-<p>Owner: MR TIHOMIR L TODOROV, 21-23 London Road, Portsmouth, PO2 0BQ, UK - dropoffpay.co.uk@gmail.com</p>
-<p>This site provides free information about airport parking prices in Bulgaria. Prices are verified from sofia-airport.eu and burgas-airport.bg but may change at any time. Always check at the barrier.</p>
-<p>We are part of DROPOFFPAY.CO.UK network. This site is free & independent, run by volunteers.</p>
-<p>We are not responsible for fines or changes in airport policy.</p>
-<p><a href="/">← Back</a></p>
-</body></html>
+<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Terms - dropoffpay-bg.com</title><style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:14px;line-height:1.7}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:10px}.lang button{padding:6px 8px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:800;font-size:10px}.lang button.active{background:#0B57D0;color:#fff}</style></head><body>
+<header><a href="/" style="font-weight:900;color:#0B57D0;text-decoration:none">dropoffpay-bg.com</a><div class="lang"><button onclick="setL('bg')" id="b-bg" class="active">БГ</button><button onclick="setL('en')" id="b-en">EN</button><button onclick="setL('de')" id="b-de">DE</button><button onclick="setL('ro')" id="b-ro">RO</button><button onclick="setL('tr')" id="b-tr">TR</button><button onclick="setL('gr')" id="b-gr">GR</button></div></header>
+<div id="c" style="margin-top:16px"></div>
+<script>
+const T={
+bg:{t:"Общи условия",d:`Последна актуализация: 2026<br><br>Сайтът предоставя безплатна информация за паркинг цени на летища в България. Цените са проверени от sofia-airport.eu и burgas-airport.bg, но могат да се променят - проверявайте на бариерата.<br><br>Част от DROPOFFPAY.CO.UK мрежа. Безплатен и независим, доброволци.<br><br>Не носим отговорност за глоби.<br><br>Owner: MR TIHOMIR L TODOROV, Portsmouth, UK - dropoffpay.co.uk@gmail.com`},
+en:{t:"Terms & Conditions",d:`Last updated: 2026<br><br>This site provides free info about airport parking prices in Bulgaria. Prices verified from sofia-airport.eu and burgas-airport.bg but may change - check at barrier.<br><br>Part of DROPOFFPAY.CO.UK network. Free & independent, volunteer team.<br><br>Not responsible for fines.<br><br>Owner: MR TIHOMIR L TODOROV`},
+de:{t:"AGB",d:`Letztes Update: 2026<br><br>Kostenlose Infos über Parkpreise. Geprüft von sofia-airport.eu und burgas-airport.bg, können sich ändern.<br><br>Teil von DROPOFFPAY.CO.UK. Kostenlos & unabhängig.<br><br>Owner: MR TIHOMIR L TODOROV`},
+ro:{t:"Termeni",d:`Ultima actualizare: 2026<br><br>Informații gratuite despre prețuri parcare. Verificat de pe site-uri oficiale, pot să se schimbe.<br><br>Parte din DROPOFFPAY.CO.UK. Gratuit.`},
+tr:{t:"Şartlar",d:`Son güncelleme: 2026<br><br>Ücretsiz otopark fiyatı bilgisi. Resmi sitelerden doğrulandı, değişebilir.<br><br>DROPOFFPAY.CO.UK parçası. Ücretsiz.`},
+gr:{t:"Όροι",d:`Τελευταία ενημέρωση: 2026<br><br>Δωρεάν πληροφορίες για τιμές πάρκινγκ. Επαληθεύτηκε από επίσημες ιστοσελίδες, μπορεί να αλλάξουν.<br><br>Μέρος του DROPOFFPAY.CO.UK. Δωρεάν.`}
+};
+let L='bg';function R(){document.getElementById('c').innerHTML=`<h1>${T[L].t}</h1><p>${T[L].d}</p><p style="margin-top:20px"><a href="/">← Back</a></p>`;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+L).classList.add('active');}
+function setL(l){L=l;R();}R();
+</script></body></html>
