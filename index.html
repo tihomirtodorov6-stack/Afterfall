@@ -3,69 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Летища България - Kiss & Ride, Паркинг Такси 2026</title>
-<meta name="description" content="Такси и безплатен престой на летищата в България 2026. София, Варна, Бургас, Пловдив - Kiss & Ride 10 мин безплатно.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Летища България - Kiss & Ride 2026</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#f8f9fb;color:#111;line-height:1.6}
-header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:100}
-.header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:800;font-size:20px;color:#0B57D0;text-decoration:none}
-nav a{margin-left:16px;text-decoration:none;color:#333;font-weight:500;font-size:14px}
-nav a:hover{color:#0B57D0}
-.hero{max-width:1100px;margin:0 auto;padding:40px 20px 20px}
-.hero h1{font-size:30px;line-height:1.2;margin-bottom:10px}
-.hero p{color:#555;max-width:700px}
-.search-box{max-width:1100px;margin:10px auto;padding:0 20px}
-.search-box input{width:100%;padding:14px 16px;border:1px solid #ddd;border-radius:10px;font-size:16px}
-.airports-grid{max-width:1100px;margin:20px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.airport-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;cursor:pointer;transition:0.2s}
-.airport-card:hover{border-color:#0B57D0;box-shadow:0 4px 12px rgba(11,87,208,.1);transform:translateY(-2px)}
-.card-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#0B57D0;margin-bottom:6px}
-.airport-card h3{font-size:18px;margin-bottom:6px}
-.kiss{font-size:12px;color:#059669;background:#ecfdf5;display:inline-block;padding:2px 8px;border-radius:20px;margin-bottom:6px}
-#airport-detail{display:none;max-width:1100px;margin:20px auto;padding:20px;background:#fff;border-radius:12px;border:1px solid #e5e7eb}
-.back-btn{background:#f3f4f6;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;margin-bottom:12px}
-.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px}
-.detail-card{border:1px solid #e5e7eb;border-radius:10px;padding:16px;background:#fafafa}
-.detail-card.warning{background:#fffbeb;border-color:#f59e0b}
-.detail-card.highlight{background:#eff6ff;border-color:#0B57D0}
-.detail-card h3{margin-bottom:10px;font-size:16px}
-.detail-card ul{list-style:none}
-.detail-card li{padding:6px 0;border-bottom:1px solid #eee;font-size:14px}
-.calc-box{border:1px dashed #0B57D0;border-radius:10px;padding:16px;background:#f8faff;margin-top:20px}
-.calc-box input{padding:6px 10px;border:1px solid #ccc;border-radius:6px;width:80px;margin-left:8px}
-.saving{color:#059669;font-size:18px;font-weight:700}
-footer{max-width:1100px;margin:40px auto;padding:20px;color:#777;font-size:13px;text-align:center;border-top:1px solid #eee}
-.badge{background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:12px;font-size:11px;margin-left:6px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#f8f9fb;color:#111}
+header{background:#fff;padding:14px 20px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;position:sticky;top:0}
+.logo{font-weight:800;color:#0B57D0;text-decoration:none;font-size:20px}
+.hero{max-width:900px;margin:0 auto;padding:30px 20px}
+.grid{max-width:900px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;cursor:pointer}
+.card:hover{border-color:#0B57D0}
+.badge{color:#059669;background:#ecfdf5;padding:2px 8px;border-radius:20px;font-size:12px;display:inline-block;margin-top:6px}
+#detail{display:none;max-width:900px;margin:0 auto;padding:20px}
+.btn{padding:8px 12px;border:none;background:#eee;border-radius:8px;cursor:pointer;margin-bottom:12px}
+.box{border:1px solid #ddd;padding:14px;border-radius:10px;margin-top:12px;background:#fff}
+.box.warn{background:#fffbeb}
+.box.blue{background:#eff6ff}
+footer{text-align:center;padding:30px;color:#777;font-size:12px}
 </style>
 </head>
 <body>
-<header><div class="header-inner">
-<a href="/" class="logo">Letishta.bg <span class="badge">BETA</span></a>
-<nav>
-<a href="#" onclick="showAirport('sof')">София</a>
-<a href="#" onclick="showAirport('var')">Варна</a>
-<a href="#" onclick="showAirport('boj')">Бургас</a>
-<a href="#" onclick="showAirport('pdv')">Пловдив</a>
-</nav></div></header>
-
-<div class="hero">
-<h1>Такси и безплатен престой на летищата в България (2026)</h1>
-<p>Пълна информация за Kiss & Ride зоните, колко минути са безплатни и колко струва паркингът на <b>София, Варна, Бургас, Пловдив</b>. Актуално към Август 2026.</p>
+<header><a class="logo" href="/">Letishta.bg</a><div>BG</div></header>
+<div id="home">
+<div class="hero"><h1>Такси и безплатен престой на летищата в България 2026</h1><p style="color:#555;margin-top:8px">София, Варна, Бургас, Пловдив - Kiss & Ride зони, цени, карти.</p></div>
+<div class="grid" id="list"></div>
 </div>
-
-<div class="search-box">
-<input id="search-airports" placeholder="Търси летище - София, VAR, Бургас...">
-</div>
-
-<div id="airports-list" class="airports-grid"></div>
-<div id="airport-detail"></div>
-
-<footer>© 2026 Letishta.bg | Неофициален сайт - не е свързан с летищата | Структура като dropoffpay.co.uk</footer>
-
-<script src="/js/airports.js"></script>
-<script src="/js/app.js"></script>
+<div id="detail"></div>
+<footer>© 2026 Letishta.bg - Неофициален сайт | Като dropoffpay.co.uk за БГ</footer>
+<script>
+const airports=[
+{id:"sof",name:"Летище София",code:"SOF",city:"София",free:"10 мин безплатно",price:"5 лв / час след това",p1:"P1 Краткосрочен Т2 - 5 лв/ч",p2:"P2 Многоетажен - 35 лв/ден",p3:"Частен FlyPark - от 12 лв/ден с трансфер"},
+{id:"var",name:"Летище Варна",code:"VAR",city:"Варна",free:"10 мин безплатно",price:"3 лв / 30 мин след това",p1:"P1 - 3 лв/30мин / 6 лв/ч",p2:"P2 Дългосрочен - 25 лв/ден",p3:"На бариера - кеш/карта"},
+{id:"boj",name:"Летище Бургас",code:"BOJ",city:"Бургас",free:"10 мин безплатно",price:"3 лв / 30 мин след това",p1:"P1 - 3 лв/30мин",p2:"Дългосрочен - 20-25 лв/ден сезонно",p3:"На бариера"},
+{id:"pdv",name:"Летище Пловдив",code:"PDV",city:"Пловдив",free:"15 мин безплатно",price:"2 лв / час след това",p1:"P1 - 2 лв/ч / 15 лв/ден",p2:"Много евтино",p3:"Безплатен престой"}
+];
+const list=document.getElementById('list');
+const home=document.getElementById('home');
+const detail=document.getElementById('detail');
+function render(){
+list.innerHTML="";
+airports.forEach(a=>{
+const d=document.createElement('div');d.className='card';
+d.innerHTML=`<b>${a.code}</b> - ${a.city}<h3 style="margin:6px 0">${a.name}</h3><span class="badge">${a.free}</span><div style="font-size:13px;color:#666;margin-top:6px">Натисни за цени</div>`;
+d.onclick=()=>show(a.id);list.appendChild(d);
+});
+}
+function show(id){
+const a=airports.find(x=>x.id===id);
+home.style.display='none';detail.style.display='block';window.scrollTo(0,0);
+detail.innerHTML=`<button class="btn" onclick="back()">← Назад</button><h2>${a.name} (${a.code})</h2><p style="margin:8px 0;color:#555">Kiss & Ride: <b>${a.free}</b> - ${a.price}</p><div class="box warn"><h3>🚗 Kiss & Ride / Drop-off</h3><p>${a.free} пред терминала. След това: ${a.price}. Паркирането в зоната е забранено.</p></div><div class="box blue"><h3>🅿️ Паркинг</h3><p>${a.p1}<br>${a.p2}<br>${a.p3}</p></div><div class="box"><h3>Калкулатор 7 дни</h3><p>Официален: ~${id==='sof'?245:id==='var'?175:140} лв<br>Частен: ~84 лв<br><b style="color:green">Спестяваш до 161 лв</b></p></div>`;
+}
+function back(){detail.style.display='none';home.style.display='block';}
+render();
+</script>
 </body>
 </html>
