@@ -1,9 +1,15 @@
-<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact - dropoffpay-bg.com</title>
-<style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:20px;line-height:1.7}</style></head><body>
-<h1>Contact DROPOFFPAY-BG.COM</h1>
-<p>Part of DROPOFFPAY.CO.UK International Airport Network</p>
-<p><b>Email:</b> dropoffpay.co.uk@gmail.com</p>
-<p><b>Owner:</b> MR TIHOMIR L TODOROV<br>21-23 London Road, Portsmouth, PO2 0BQ, UK</p>
-<p>For airport prices, ads, or corrections - email us!</p>
-<p><a href="/">← Back to dropoffpay-bg.com</a></p>
-</body></html>
+<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact - dropoffpay-bg.com</title><style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:14px;line-height:1.7}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:10px}.lang button{padding:6px 8px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:800;font-size:10px}.lang button.active{background:#0B57D0;color:#fff}</style></head><body>
+<header><a href="/" style="font-weight:900;color:#0B57D0;text-decoration:none">dropoffpay-bg.com</a><div class="lang"><button onclick="setL('bg')" id="b-bg" class="active">БГ</button><button onclick="setL('en')" id="b-en">EN</button><button onclick="setL('de')" id="b-de">DE</button><button onclick="setL('ro')" id="b-ro">RO</button><button onclick="setL('tr')" id="b-tr">TR</button><button onclick="setL('gr')" id="b-gr">GR</button></div></header>
+<div id="c" style="margin-top:16px"></div>
+<script>
+const T={
+bg:{t:"Контакт",d:`Част от DROPOFFPAY.CO.UK International Airport Network<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Собственик:</b> MR TIHOMIR L TODOROV<br>21-23 London Road, Portsmouth, PO2 0BQ, UK<br><br>За цени, реклами или корекции - пишете ни!`},
+en:{t:"Contact DROPOFFPAY-BG.COM",d:`Part of DROPOFFPAY.CO.UK International Airport Network<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Owner:</b> MR TIHOMIR L TODOROV<br>21-23 London Road, Portsmouth, PO2 0BQ, UK<br><br>For prices, ads or corrections - email us!`},
+de:{t:"Kontakt",d:`Teil von DROPOFFPAY.CO.UK<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Owner:</b> MR TIHOMIR L TODOROV, Portsmouth, UK`},
+ro:{t:"Contact",d:`Parte din DROPOFFPAY.CO.UK<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Owner:</b> MR TIHOMIR L TODOROV`},
+tr:{t:"İletişim",d:`DROPOFFPAY.CO.UK parçası<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Owner:</b> MR TIHOMIR L TODOROV`},
+gr:{t:"Επικοινωνία",d:`Μέρος του DROPOFFPAY.CO.UK<br><br><b>Email:</b> dropoffpay.co.uk@gmail.com<br><br><b>Owner:</b> MR TIHOMIR L TODOROV`}
+};
+let L='bg';function R(){document.getElementById('c').innerHTML=`<h1>${T[L].t}</h1><p>${T[L].d}</p><p style="margin-top:20px"><a href="/">← Back</a></p>`;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+L).classList.add('active');}
+function setL(l){L=l;R();}R();
+</script></body></html>
