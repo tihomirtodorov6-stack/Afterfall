@@ -1,21 +1,15 @@
-<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy - dropoffpay-bg.com</title>
-<style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:20px;line-height:1.7;color:#111}h1{font-size:24px}a{color:#0B57D0}</style></head><body>
-<h1>Privacy Policy for DROPOFFPAY-BG.COM</h1>
-<p><b>Last updated: 2026</b></p>
-<p><b>Owner:</b><br>MR TIHOMIR L TODOROV, 21-23 London Road, Portsmouth, PO2 0BQ, UK<br>
-Email: dropoffpay.co.uk@gmail.com<br>
-Part of DROPOFFPAY.CO.UK International Airport Network</p>
-
-<h3>Google AdSense</h3>
-<p>We use Google AdSense to show ads. Google uses cookies and the DART cookie to serve ads based on your visit to our site and other sites on the Internet. You may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy at https://policies.google.com/technologies/ads</p>
-
-<h3>Cookies</h3>
-<p>We use cookies to keep you logged in and to show relevant ads.</p>
-
-<h3>Data</h3>
-<p>We collect phone number for login and airport search preferences. We do not sell your data. For dropoffpay-bg.com we collect NO personal data - only airport prices from sofia-airport.eu and burgas-airport.bg</p>
-
-<h3>Contact</h3>
-<p>For any questions: dropoffpay.co.uk@gmail.com</p>
-<p><a href="/">← Back to dropoffpay-bg.com</a> | <a href="https://dropoffpay.co.uk">Mother site dropoffpay.co.uk</a></p>
-</body></html>
+<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy - dropoffpay-bg.com</title><style>body{font-family:-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:14px;line-height:1.7}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:10px}.lang button{padding:6px 8px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:800;font-size:10px}.lang button.active{background:#0B57D0;color:#fff}</style></head><body>
+<header><a href="/" style="font-weight:900;color:#0B57D0;text-decoration:none">dropoffpay-bg.com</a><div class="lang"><button onclick="setL('bg')" id="b-bg" class="active">БГ</button><button onclick="setL('en')" id="b-en">EN</button><button onclick="setL('de')" id="b-de">DE</button><button onclick="setL('ro')" id="b-ro">RO</button><button onclick="setL('tr')" id="b-tr">TR</button><button onclick="setL('gr')" id="b-gr">GR</button></div></header>
+<div id="c" style="margin-top:16px"></div>
+<script>
+const T={
+bg:{t:"Privacy Policy",d:`Last updated: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV, 21-23 London Road, Portsmouth, PO2 0BQ, UK<br>Email: dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> Използваме Google AdSense. Google използва бисквитки и DART cookie за реклами базирани на вашето посещение. Може да се откажете на https://policies.google.com/technologies/ads<br><br><b>Cookies:</b> Използваме бисквитки за логин и реклами.<br><br><b>Data:</b> Събираме телефон за логин и предпочитания. Не продаваме данни. За BG сайта не събираме лични данни - само цени от sofia-airport.eu и burgas-airport.bg`},
+en:{t:"Privacy Policy for DROPOFFPAY.CO.UK",d:`Last updated: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV, 21-23 London Road, Portsmouth, PO2 0BQ, UK<br>Email: dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> We use Google AdSense to show ads. Google uses cookies and the DART cookie to serve ads based on your visit to our site and other sites on the Internet. You may opt out of the use of the DART cookie by visiting https://policies.google.com/technologies/ads<br><br><b>Cookies:</b> We use cookies to keep you logged in and to show relevant ads.<br><br><b>Data:</b> We collect phone number for login and airport search preferences. We do not sell your data.`},
+de:{t:"Datenschutz",d:`Letztes Update: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV, Portsmouth - dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> Wir nutzen Google AdSense. Google nutzt Cookies und DART-Cookie. Opt-out: https://policies.google.com/technologies/ads<br><br><b>Cookies:</b> Für Login und Werbung.<br><br><b>Data:</b> Keine persönlichen Daten für BG.`},
+ro:{t:"Confidențialitate",d:`Ultima actualizare: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV - dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> Folosim AdSense. Opt-out: https://policies.google.com/technologies/ads<br><br><b>Cookies:</b> Pentru login și reclame.`},
+tr:{t:"Gizlilik",d:`Son güncelleme: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV - dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> AdSense kullanıyoruz. Opt-out: https://policies.google.com/technologies/ads<br><br><b>Cookies:</b> Giriş ve reklamlar için.`},
+gr:{t:"Απορρήτου",d:`Τελευταία ενημέρωση: 2026<br><br><b>Owner:</b> MR TIHOMIR L TODOROV - dropoffpay.co.uk@gmail.com<br><br><b>Google AdSense:</b> Χρησιμοποιούμε AdSense. Opt-out: https://policies.google.com/technologies/ads`}
+};
+let L='bg';function R(){document.getElementById('c').innerHTML=`<h1>${T[L].t}</h1><p>${T[L].d}</p><p style="margin-top:20px"><a href="/">← Back</a></p>`;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+L).classList.add('active');}
+function setL(l){L=l;R();}R();
+</script></body></html>
