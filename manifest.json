@@ -1,15 +1,25 @@
 {
-  "name": "Letishta.bg - Летища България",
-  "short_name": "Letishta",
-  "description": "Kiss & Ride и паркинг цени за летища в България 2026",
+  "name": "dropoffpay-bg.com",
+  "short_name": "DropoffBG",
+  "description": "Летища България 2026 - Проверени цени в ЕВРО",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0B57D0",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3774/3774080.png",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]
