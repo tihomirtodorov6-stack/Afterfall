@@ -1,0 +1,16 @@
+{
+  "name": "Letishta.bg - Летища България",
+  "short_name": "Letishta",
+  "description": "Kiss & Ride и паркинг цени за летища в България 2026",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0B57D0",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3774/3774080.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
