@@ -1,67 +1,60 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Летища България - Kiss & Ride 2026</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#0B57D0">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3774/3774080.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Letishta.bg">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Летища България 2026</title>
+<link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#0B57D0">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#f8f9fb;color:#111}
-header{background:#fff;padding:14px 20px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;position:sticky;top:0}
-.logo{font-weight:800;color:#0B57D0;text-decoration:none;font-size:20px}
-.hero{max-width:900px;margin:0 auto;padding:30px 20px}
-.grid{max-width:900px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;cursor:pointer}
-.card:hover{border-color:#0B57D0}
-.badge{color:#059669;background:#ecfdf5;padding:2px 8px;border-radius:20px;font-size:12px;display:inline-block;margin-top:6px}
-#detail{display:none;max-width:900px;margin:0 auto;padding:20px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}body{background:#f8f9fb}
+header{background:#fff;padding:10px 14px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.logo{font-weight:800;color:#0B57D0;text-decoration:none;font-size:18px}
+.lang{display:flex;gap:4px;flex-wrap:wrap}
+.lang button{padding:5px 8px;border:1px solid #ddd;border-radius:20px;background:#fff;cursor:pointer;font-weight:800;font-size:12px}
+.lang button.active{background:#0B57D0;color:#fff}
+.hero{max-width:900px;margin:0 auto;padding:24px 16px}
+.grid{max-width:900px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;cursor:pointer}
+.badge{color:#059669;background:#ecfdf5;padding:2px 6px;border-radius:20px;font-size:11px}
+#detail{display:none;max-width:900px;margin:0 auto;padding:16px}
 .btn{padding:8px 12px;border:none;background:#eee;border-radius:8px;cursor:pointer;margin-bottom:12px}
-.box{border:1px solid #ddd;padding:14px;border-radius:10px;margin-top:12px;background:#fff}
-.box.warn{background:#fffbeb}
-.box.blue{background:#eff6ff}
-footer{text-align:center;padding:30px;color:#777;font-size:12px}
+.box{border:1px solid #ddd;padding:12px;border-radius:10px;margin-top:10px;background:#fff}
 </style>
 </head>
 <body>
-<header><a class="logo" href="/">Letishta.bg</a><div>BG</div></header>
-<div id="home">
-<div class="hero"><h1>Такси и безплатен престой на летищата в България 2026</h1><p style="color:#555;margin-top:8px">София, Варна, Бургас, Пловдив - Kiss & Ride зони, цени, карти.</p></div>
-<div class="grid" id="list"></div>
-</div>
+<header><a class="logo" href="/">Letishta.bg</a>
+<div class="lang">
+<button onclick="setLang('bg')" id="b-bg" class="active">BG</button>
+<button onclick="setLang('en')" id="b-en">EN</button>
+<button onclick="setLang('de')" id="b-de">DE</button>
+<button onclick="setLang('ro')" id="b-ro">RO</button>
+<button onclick="setLang('tr')" id="b-tr">TR</button>
+<button onclick="setLang('gr')" id="b-gr">GR</button>
+</div></header>
+<div id="home"><div class="hero"><h1 id="h1"></h1><p id="sub" style="color:#555;margin-top:8px;font-size:14px"></p></div><div class="grid" id="list"></div></div>
 <div id="detail"></div>
-<footer>© 2026 Letishta.bg - Неофициален сайт | Като dropoffpay.co.uk за БГ</footer>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
-const airports=[
-{id:"sof",name:"Летище София",code:"SOF",city:"София",free:"10 мин безплатно",price:"5 лв / час след това",p1:"P1 Краткосрочен Т2 - 5 лв/ч",p2:"P2 Многоетажен - 35 лв/ден",p3:"Частен FlyPark - от 12 лв/ден с трансфер"},
-{id:"var",name:"Летище Варна",code:"VAR",city:"Варна",free:"10 мин безплатно",price:"3 лв / 30 мин след това",p1:"P1 - 3 лв/30мин / 6 лв/ч",p2:"P2 Дългосрочен - 25 лв/ден",p3:"На бариера - кеш/карта"},
-{id:"boj",name:"Летище Бургас",code:"BOJ",city:"Бургас",free:"10 мин безплатно",price:"3 лв / 30 мин след това",p1:"P1 - 3 лв/30мин",p2:"Дългосрочен - 20-25 лв/ден сезонно",p3:"На бариера"},
-{id:"pdv",name:"Летище Пловдив",code:"PDV",city:"Пловдив",free:"15 мин безплатно",price:"2 лв / час след това",p1:"P1 - 2 лв/ч / 15 лв/ден",p2:"Много евтино",p3:"Безплатен престой"}
+const T={
+bg:{h1:"Такси и безплатен престой на летищата 2026",sub:"София, Варна, Бургас, Пловдив - Kiss & Ride, цени",free:"безплатно",btn:"Цени",back:"← Назад"},
+en:{h1:"Bulgaria Airport Drop-off Fees 2026",sub:"Sofia, Varna, Burgas, Plovdiv - Free Kiss & Ride, maps",free:"FREE",btn:"Prices",back:"← Back"},
+de:{h1:"Bulgarien Flughafen Gebühren 2026",sub:"Sofia, Varna, Burgas, Plovdiv - Kiss & Ride",free:"KOSTENLOS",btn:"Preise",back:"← Zurück"},
+ro:{h1:"Taxe aeroport Bulgaria 2026",sub:"Sofia, Varna, Burgas, Plovdiv - Kiss & Ride gratuit",free:"GRATUIT",btn:"Prețuri",back:"← Înapoi"},
+tr:{h1:"Bulgaristan Havalimanı Ücretleri 2026",sub:"Sofya, Varna, Burgaz, Filibe - Ücretsiz Kiss & Ride",free:"ÜCRETSİZ",btn:"Fiyatlar",back:"← Geri"},
+gr:{h1:"Τέλη αεροδρομίου Βουλγαρίας 2026",sub:"Σόφια, Βάρνα, Μπουργκάς, Φιλιππούπολη - Δωρεάν Kiss & Ride",free:"ΔΩΡΕΑΝ",btn:"Τιμές",back:"← Πίσω"}
+};
+let L='bg';
+const A=[
+{id:"sof",city:"Sofia",code:"SOF",name:{bg:"Летище София",en:"Sofia Airport",de:"Flughafen Sofia",ro:"Aeroport Sofia",tr:"Sofya Havalimanı",gr:"Αεροδρόμιο Σόφιας"},free:{bg:"10 мин безплатно",en:"10 min free",de:"10 Min kostenlos",ro:"10 min gratuit",tr:"10 dk ücretsiz",gr:"10 λεπτά δωρεάν"}},
+{id:"var",city:"Varna",code:"VAR",name:{bg:"Летище Варна",en:"Varna Airport",de:"Flughafen Varna",ro:"Aeroport Varna",tr:"Varna Havalimanı",gr:"Αεροδρόμιο Βάρνας"},free:{bg:"10 мин безплатно",en:"10 min free",de:"10 Min kostenlos",ro:"10 min gratuit",tr:"10 dk ücretsiz",gr:"10 λεπτά δωρεάν"}},
+{id:"boj",city:"Burgas",code:"BOJ",name:{bg:"Летище Бургас",en:"Burgas Airport",de:"Flughafen Burgas",ro:"Aeroport Burgas",tr:"Burgaz Havalimanı",gr:"Αεροδρόμιο Μπουργκάς"},free:{bg:"10 мин безплатно",en:"10 min free",de:"10 Min kostenlos",ro:"10 min gratuit",tr:"10 dk ücretsiz",gr:"10 λεπτά δωρεάν"}},
+{id:"pdv",city:"Plovdiv",code:"PDV",name:{bg:"Летище Пловдив",en:"Plovdiv Airport",de:"Flughafen Plovdiv",ro:"Aeroport Plovdiv",tr:"Filibe Havalimanı",gr:"Αεροδρόμιο Φιλιππούπολης"},free:{bg:"15 мин безплатно",en:"15 min free",de:"15 Min kostenlos",ro:"15 min gratuit",tr:"15 dk ücretsiz",gr:"15 λεπτά δωρεάν"}}
 ];
-const list=document.getElementById('list');
-const home=document.getElementById('home');
-const detail=document.getElementById('detail');
-function render(){
-list.innerHTML="";
-airports.forEach(a=>{
-const d=document.createElement('div');d.className='card';
-d.innerHTML=`<b>${a.code}</b> - ${a.city}<h3 style="margin:6px 0">${a.name}</h3><span class="badge">${a.free}</span><div style="font-size:13px;color:#666;margin-top:6px">Натисни за цени</div>`;
-d.onclick=()=>show(a.id);list.appendChild(d);
-});
-}
-function show(id){
-const a=airports.find(x=>x.id===id);
-home.style.display='none';detail.style.display='block';window.scrollTo(0,0);
-detail.innerHTML=`<button class="btn" onclick="back()">← Назад</button><h2>${a.name} (${a.code})</h2><p style="margin:8px 0;color:#555">Kiss & Ride: <b>${a.free}</b> - ${a.price}</p><div class="box warn"><h3>🚗 Kiss & Ride / Drop-off</h3><p>${a.free} пред терминала. След това: ${a.price}. Паркирането в зоната е забранено.</p></div><div class="box blue"><h3>🅿️ Паркинг</h3><p>${a.p1}<br>${a.p2}<br>${a.p3}</p></div><div class="box"><h3>Калкулатор 7 дни</h3><p>Официален: ~${id==='sof'?245:id==='var'?175:140} лв<br>Частен: ~84 лв<br><b style="color:green">Спестяваш до 161 лв</b></p></div>`;
-}
+function setLang(l){L=l;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+l).classList.add('active');document.getElementById('h1').innerText=T[l].h1;document.getElementById('sub').innerText=T[l].sub;render();}
+const list=document.getElementById('list'),home=document.getElementById('home'),detail=document.getElementById('detail');
+function render(){list.innerHTML="";A.forEach(a=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<b>${a.code}</b><h4 style="margin:4px 0;font-size:14px">${a.name[L]}</h4><span class="badge">${a.free[L]}</span><div style="font-size:11px;color:#666;margin-top:4px">${T[L].btn}</div>`;d.onclick=()=>show(a.id);list.appendChild(d);});}
+function show(id){const a=A.find(x=>x.id===id);home.style.display='none';detail.style.display='block';window.scrollTo(0,0);detail.innerHTML=`<button class="btn" onclick="back()">${T[L].back}</button><h2>${a.name[L]} (${a.code})</h2><div class="box"><b>${a.free[L]}</b> - Kiss & Ride</div>`;}
 function back(){detail.style.display='none';home.style.display='block';}
-render();
+setLang('bg');
 </script>
 </body>
 </html>
