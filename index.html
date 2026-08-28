@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letishta.bg 2026</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0B57D0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}
+body{background:#f5f6f8;color:#111}
+header{background:#fff;padding:10px 12px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:30}
+.lang button{padding:6px 8px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:800;font-size:10px}
+.lang button.active{background:#0B57D0;color:#fff}
+.grid{max-width:900px;margin:0 auto;padding:0 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border-radius:16px;padding:14px}
+#detail{display:none;max-width:900px;margin:0 auto;padding:10px}
+.term-card{background:#fff;border-radius:18px;border:1px solid #e5e7eb;margin-bottom:14px;overflow:hidden}
+.term-head{padding:12px 14px;color:#fff;display:flex;justify-content:space-between}
+.term-body{padding:14px;line-height:1.7;font-size:14px}
+.row{display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding:8px 0}
+.map-btn{display:block;background:#0B57D0;color:#fff;text-align:center;padding:14px;border-radius:12px;text-decoration:none;font-weight:800;margin-top:8px;font-size:15px}
+</style>
+</head>
+<body>
+<header><b style="color:#0B57D0">Letishta.bg</b>
+<div class="lang">
+<button onclick="setLang('bg')" id="b-bg" class="active">БГ</button>
+<button onclick="setLang('en')" id="b-en">EN</button>
+<button onclick="setLang('de')" id="b-de">DE</button>
+<button onclick="setLang('ro')" id="b-ro">RO</button>
+<button onclick="setLang('tr')" id="b-tr">TR</button>
+<button onclick="setLang('gr')" id="b-gr">GR</button>
+</div></header>
+
+<div id="home"><div style="max-width:900px;margin:0 auto;padding:14px"><h1 id="h1" style="font-size:20px"></h1><p id="sub" style="font-size:12px;color:#666"></p></div><div class="grid" id="list"></div></div>
+<div id="detail"></div>
+
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
+
+let L='bg';
+let current=null;
+
+const UI={
+bg:{title:"Летища България 2026 - Всичко в ЕВРО",sub:"Написано просто - за дядо и баба. Къде да спреш без пари.",back:"← Назад",map:"📍 Виж картата",nav:"🧭 Упътване с кола - къде да спра",free:"БЕЗПЛАТНО",drop:"КЪДЕ ДА СПРЕШ ЗА 10 МИН БЕЗ ПАРИ",park:"КЪДЕ ДА ПАРКИРАШ - Цени в ЕВРО",tip:"ВАЖНО ЗА ВАС"},
+en:{title:"Bulgaria Airports 2026 - All in EURO",sub:"Simple guide for everyone - where to stop for free",back:"← Back",map:"📍 View Map",nav:"🧭 Drive there - Drop Off",free:"FREE",drop:"WHERE TO STOP FOR FREE",park:"WHERE TO PARK - Prices in EURO",tip:"IMPORTANT"},
+de:{title:"Bulgarien Flughäfen 2026 - Alles in EURO",sub:"Einfach erklärt - wo kostenlos halten",back:"← Zurück",map:"📍 Karte ansehen",nav:"🧭 Navigation zum Halten",free:"KOSTENLOS",drop:"WO KOSTENLOS HALTEN",park:"WO PARKEN - Preise in EURO",tip:"WICHTIG"},
+ro:{title:"Aeroporturi Bulgaria 2026 - Tot în EURO",sub:"Simplu explicat - unde oprești gratis",back:"← Înapoi",map:"📍 Vezi harta",nav:"🧭 Navigare - unde oprești",free:"GRATUIT",drop:"UNDE OPREȘTI GRATIS",park:"UNDE PARCHEZI - Prețuri EURO",tip:"IMPORTANT"},
+tr:{title:"Bulgaristan 2026 - Hepsi EURO",sub:"Basit rehber - nerede ücretsiz durulur",back:"← Geri",map:"📍 Haritayı gör",nav:"🧭 Arabayla git - durma yeri",free:"ÜCRETSİZ",drop:"NERDE ÜCRETSİZ DURULUR",park:"NEREYE PARK EDİLİR - EURO fiyat",tip:"ÖNEMLİ"},
+gr:{title:"Αεροδρόμια Βουλγαρίας 2026 - Όλα σε ΕΥΡΩ",sub:"Απλός οδηγός - που σταματάς δωρεάν",back:"← Πίσω",map:"📍 Δες χάρτη",nav:"🧭 Οδήγηση - που σταματάς",free:"ΔΩΡΕΑΝ",drop:"ΠΟΥ ΣΤΑΜΑΤΑΣ ΔΩΡΕΑΝ",park:"ΠΟΥ ΠΑΡΚΑΡΕΙΣ - Τιμές ΕΥΡΩ",tip:"ΣΗΜΑΝΤΙΚΟ"}
+};
+
+const AIR={
+sof:{code:"SOF",names:{bg:"София",en:"Sofia",de:"Sofia",ro:"Sofia",tr:"Sofya",gr:"Σόφια"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+var:{code:"VAR",names:{bg:"Варна",en:"Varna",de:"Varna",ro:"Varna",tr:"Varna",gr:"Βάρνα"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+boj:{code:"BOJ",names:{bg:"Бургас",en:"Burgas",de:"Burgas",ro:"Burgas",tr:"Burgaz",gr:"Μπουργκάς"},free:{bg:"10 мин БЕЗПЛАТНО",en:"10 min FREE",de:"10 Min KOSTENLOS",ro:"10 min GRATUIT",tr:"10 dk ÜCRETSİZ",gr:"10 λεπτά ΔΩΡΕΑΝ"}},
+pdv:{code:"PDV",names:{bg:"Пловдив",en:"Plovdiv",de:"Plovdiv",ro:"Plovdiv",tr:"Filibe",gr:"Φιλιππούπολη"},free:{bg:"15 мин БЕЗПЛАТНО",en:"15 min FREE",de:"15 Min KOSTENLOS",ro:"15 min GRATUIT",tr:"15 dk ÜCRETSİZ",gr:"15 λεπτά ΔΩΡΕΑΝ"}}
+};
+
+function getDetail(id){
+const u=UI[L];
+if(id==='sof'){
+const lang={
+bg:{t1:"ТЕРМИНАЛ 1 - Старият - Wizz Air, Ryanair",t2:"ТЕРМИНАЛ 2 - Новият - 90% от самолетите",addr1:"Адрес: Искърско шосе 7",addr2:"Адрес: Христофор Колумб 1. Метро М4 спира вътре в терминала.",drop1:"Точно пред входа на Терминал 1. Има бариера - взимаш билетче.",drop2:"Точно пред входа за заминаващи на Терминал 2. Две ленти. Взимаш билетче от бариерата. Пази билетчето!",price:"Първите 10 минути: 0,00 € БЕЗПЛАТНО. След това: 10 до 30 мин - 2,56 €. 30 до 60 мин - 5,11 €. Над 1 час - 3,07 € на час.",p1:"Р1 - до Терминал 1 - 1 минута пеша: 2,56 € на час / 12,78 € на ден",p2:"Р2 - икономичен - 3 минути пеша: 1,53 € на час / 7,67 € на ден",p3:"Р3 - до Терминал 2 - 30 секунди пеша: 3,58 € на час / 20,45 € на ден",p4:"Р4 - покрит, най-ползван - 2 минути пеша: 2,05 € на час / 10,23 € на ден",p5:"Р5 - дългосрочен - 5 минути + автобус: 1,53 € на час / 7,67 € на ден",p6:"Р6 - най-евтин: 1,02 € на час / 5,11 € на ден",tip:"Ако чакате някой да кацне - НЕ влизайте в безплатната зона! Паркирайте на Р4 за 2,05 € и чакайте вътре на топло с кафе. На безплатната зона има камери и глобяват ако стоите повече от 10 минути!"},
+en:{t1:"TERMINAL 1 - Old - Wizz Air, Ryanair",t2:"TERMINAL 2 - New - 90% of flights",addr1:"Address: Iskarsko shose 7",addr2:"Address: Hristofor Kolumb 1. Metro M4 goes inside Terminal 2.",drop1:"Right in front of Terminal 1 entrance. Barrier - take ticket.",drop2:"Right in front of Terminal 2 Departures. Two lanes. Take ticket from barrier. Keep ticket!",price:"First 10 min: 0.00 € FREE. After: 10 to 30 min - 2.56 €. 30 to 60 min - 5.11 €. Over 1 hour - 3.07 € per hour.",p1:"P1 - next to Terminal 1 - 1 min walk: 2.56 €/h / 12.78 €/day",p2:"P2 - economy - 3 min walk: 1.53 €/h / 7.67 €/day",p3:"P3 - next to Terminal 2 - 30 sec walk: 3.58 €/h / 20.45 €/day",p4:"P4 - covered, most used - 2 min walk: 2.05 €/h / 10.23 €/day",p5:"P5 - long term - 5 min + bus: 1.53 €/h / 7.67 €/day",p6:"P6 - cheapest: 1.02 €/h / 5.11 €/day",tip:"If you wait for someone to land - DO NOT enter free zone! Park at P4 for 2.05 € and wait inside with coffee. Free zone has cameras and fines if you stay more than 10 min!"},
+de:{t1:"TERMINAL 1 - Alt - Wizz Air, Ryanair",t2:"TERMINAL 2 - Neu - 90% der Flüge",addr1:"Adresse: Iskarsko shose 7",addr2:"Adresse: Hristofor Kolumb 1. Metro M4 fährt in Terminal 2.",drop1:"Direkt vor Eingang Terminal 1. Schranke - Ticket nehmen.",drop2:"Direkt vor Abflug Terminal 2. Zwei Spuren. Ticket an Schranke nehmen!",price:"Erste 10 Min: 0,00 € KOSTENLOS. Danach: 10-30 Min - 2,56 €. 30-60 Min - 5,11 €. Über 1h - 3,07 €/h.",p1:"P1 - neben Terminal 1 - 1 Min: 2,56 €/h / 12,78 €/Tag",p2:"P2 - günstig - 3 Min: 1,53 €/h / 7,67 €/Tag",p3:"P3 - neben Terminal 2 - 30 Sek: 3,58 €/h / 20,45 €/Tag",p4:"P4 - überdacht, meist genutzt - 2 Min: 2,05 €/h / 10,23 €/Tag",p5:"P5 - Langzeit - 5 Min + Bus: 1,53 €/h / 7,67 €/Tag",p6:"P6 - billigstes: 1,02 €/h / 5,11 €/Tag",tip:"Wenn Sie jemanden abholen - NICHT in Gratis-Zone fahren! Parken Sie P4 für 2,05 € und warten Sie drinnen mit Kaffee. Gratis-Zone hat Kameras und Strafen über 10 Min!"},
+ro:{t1:"TERMINAL 1 - Vechi - Wizz Air, Ryanair",t2:"TERMINAL 2 - Nou - 90% zboruri",addr1:"Adresa: Iskarsko shose 7",addr2:"Adresa: Hristofor Kolumb 1. Metrou M4 merge în Terminal 2.",drop1:"Chiar în fața intrării Terminal 1. Barieră - luați bilet.",drop2:"Chiar în fața Plecări Terminal 2. Două benzi. Luați bilet de la barieră!",price:"Primele 10 min: 0,00 € GRATUIT. După: 10-30 min - 2,56 €. 30-60 min - 5,11 €. Peste 1h - 3,07 €/oră.",p1:"P1 - lângă Terminal 1 - 1 min: 2,56 €/h / 12,78 €/zi",p2:"P2 - economic - 3 min: 1,53 €/h / 7,67 €/zi",p3:"P3 - lângă Terminal 2 - 30 sec: 3,58 €/h / 20,45 €/zi",p4:"P4 - acoperit, cel mai folosit - 2 min: 2,05 €/h / 10,23 €/zi",p5:"P5 - lungă durată - 5 min + bus: 1,53 €/h / 7,67 €/zi",p6:"P6 - cel mai ieftin: 1,02 €/h / 5,11 €/zi",tip:"Dacă așteptați pe cineva - NU intrați în zona gratuită! Parcați la P4 cu 2,05 € și așteptați înăuntru cu cafea. Zona gratuită are camere și amendă peste 10 min!"},
+tr:{t1:"TERMİNAL 1 - Eski - Wizz Air, Ryanair",t2:"TERMİNAL 2 - Yeni - uçuşların %90'ı",addr1:"Adres: Iskarsko shose 7",addr2:"Adres: Hristofor Kolumb 1. Metro M4 Terminal 2 içine gider.",drop1:"Terminal 1 girişinin hemen önünde. Bariyer - bilet alın.",drop2:"Terminal 2 Gidiş önünde. İki şerit. Bariyerden bilet alın!",price:"İlk 10 dk: 0,00 € ÜCRETSİZ. Sonra: 10-30 dk - 2,56 €. 30-60 dk - 5,11 €. 1 saat üstü - 3,07 €/saat.",p1:"P1 - Terminal 1 yanında - 1 dk: 2,56 €/saat / 12,78 €/gün",p2:"P2 - ekonomik - 3 dk: 1,53 €/saat / 7,67 €/gün",p3:"P3 - Terminal 2 yanında - 30 sn: 3,58 €/saat / 20,45 €/gün",p4:"P4 - kapalı, en çok kullanılan - 2 dk: 2,05 €/saat / 10,23 €/gün",p5:"P5 - uzun süreli - 5 dk + otobüs: 1,53 €/saat / 7,67 €/gün",p6:"P6 - en ucuz: 1,02 €/saat / 5,11 €/gün",tip:"Birini bekliyorsanız - ÜCRETSİZ alana GİRMEYİN! P4'e 2,05 € park edin ve içeride kahve ile bekleyin. Ücretsiz alanda kameralar var ve 10 dk üstü ceza!"},
+gr:{t1:"ΤΕΡΜΙΝΑΛ 1 - Παλιό - Wizz Air, Ryanair",t2:"ΤΕΡΜΙΝΑΛ 2 - Νέο - 90% πτήσεις",addr1:"Διεύθυνση: Iskarsko shose 7",addr2:"Διεύθυνση: Hristofor Kolumb 1. Μετρό Μ4 πάει μέσα στο Τ2.",drop1:"Ακριβώς μπροστά από την είσοδο Τ1. Μπάρα - πάρτε εισιτήριο.",drop2:"Ακριβώς μπροστά από Αναχωρήσεις Τ2. Δύο λωρίδες. Πάρτε εισιτήριο από μπάρα!",price:"Πρώτα 10 λεπτά: 0,00 € ΔΩΡΕΑΝ. Μετά: 10-30 λεπτά - 2,56 €. 30-60 λεπτά - 5,11 €. Πάνω από 1 ώρα - 3,07 €/ώρα.",p1:"P1 - δίπλα στο Τ1 - 1 λεπτό: 2,56 €/ώρα / 12,78 €/μέρα",p2:"P2 - οικονομικό - 3 λεπτά: 1,53 €/ώρα / 7,67 €/μέρα",p3:"P3 - δίπλα στο Τ2 - 30 δευτ: 3,58 €/ώρα / 20,45 €/μέρα",p4:"P4 - σκεπαστό, πιο χρησιμοποιημένο - 2 λεπτά: 2,05 €/ώρα / 10,23 €/μέρα",p5:"P5 - μακράς διάρκειας - 5 λεπτά + λεωφορείο: 1,53 €/ώρα / 7,67 €/μέρα",p6:"P6 - φθηνότερο: 1,02 €/ώρα / 5,11 €/μέρα",tip:"Αν περιμένετε κάποιον - ΜΗΝ μπείτε στη δωρεάν ζώνη! Παρκάρετε P4 με 2,05 € και περιμένετε μέσα με καφέ. Η δωρεάν ζώνη έχει κάμερες και πρόστιμο πάνω από 10 λεπτά!"}
+}[L];
+return `
+<div style="padding:10px"><button onclick="back()" style="padding:10px 16px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700;font-size:16px">${u.back}</button>
+<h1 style="margin-top:10px;font-size:24px">${AIR.sof.names[L]} (SOF)</h1></div>
+
+<div class="term-card"><div class="term-head" style="background:#1f2937"><b>${lang.t1}</b></div>
+<div class="term-body">
+${lang.addr1}<br><br>
+<b>📍 ${u.drop}:</b><br>${lang.drop1}<br>
+<div style="background:#ecfdf5;padding:10px;border-radius:12px;margin:8px 0;font-weight:700">${lang.price}</div>
+<b>🅿️ ${u.park}:</b>
+<div class="row">${lang.p1}</div><div class="row">${lang.p2}</div>
+<a class="map-btn" href="https://www.google.com/maps/search/Sofia+Airport+Terminal+1" target="_blank">${u.map} - Терминал 1</a>
+<a class="map-btn" style="background:#111" href="https://www.google.com/maps/dir//Sofia+Airport+Terminal+1" target="_blank">${u.nav} - Т1</a>
+<iframe style="width:100%;height:200px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Sofia%20Airport%20Terminal%201&z=15&output=embed"></iframe>
+</div></div>
+
+<div class="term-card"><div class="term-head" style="background:#0B57D0"><b>${lang.t2}</b></div>
+<div class="term-body">
+${lang.addr2}<br><br>
+<b>📍 ${u.drop}:</b><br>${lang.drop2}<br>
+<div style="background:#ecfdf5;padding:10px;border-radius:12px;margin:8px 0;font-weight:700">${lang.price}</div>
+<b>🅿️ ${u.park}:</b>
+<div class="row">${lang.p3}</div><div class="row">${lang.p4}</div><div class="row">${lang.p5}</div><div class="row">${lang.p6}</div>
+<div style="background:#fef3c7;padding:12px;border-radius:12px;margin-top:10px;font-size:14px"><b>💡 ${u.tip}:</b><br>${lang.tip}</div>
+<a class="map-btn" href="https://www.google.com/maps/search/Sofia+Airport+Terminal+2" target="_blank">${u.map} - Терминал 2</a>
+<a class="map-btn" style="background:#111" href="https://www.google.com/maps/dir//Sofia+Airport+Terminal+2" target="_blank">${u.nav} - Т2</a>
+<iframe style="width:100%;height:220px;border:0;border-radius:12px;margin-top:8px" src="https://maps.google.com/maps?q=Sofia%20Airport%20Terminal%202&z=15&output=embed"></iframe>
+</div></div>
+`;
+}
+return `<div style="padding:10px"><button onclick="back()" style="padding:8px 14px;border-radius:20px;border:0;background:#e5e7eb;font-weight:700">${u.back}</button><h1>${AIR[id].names[L]}</h1><p>Детайлите за ${AIR[id].names[L]} са същите - преведени на ${L} - ще ги добавя след София</p></div>`;
+}
+
+const list=document.getElementById('list'),home=document.getElementById('home'),detail=document.getElementById('detail');
+function renderHome(){
+document.getElementById('h1').innerText=UI[L].title;
+document.getElementById('sub').innerText=UI[L].sub;
+list.innerHTML="";
+Object.keys(AIR).forEach(id=>{
+const a=AIR[id];
+const d=document.createElement('div');d.className='card';
+d.style.cursor='pointer';
+d.innerHTML=`<b>${a.code}</b><h4 style="margin:6px 0">${a.names[L]}</h4><span style="background:#ecfdf5;color:#059669;padding:4px 8px;border-radius:20px;font-weight:800;font-size:11px">${a.free[L]}</span>`;
+d.onclick=()=>{current=id;show(id);};
+list.appendChild(d);
+});
+if(current){show(current);}
+}
+function show(id){current=id;home.style.display='none';detail.style.display='block';window.scrollTo(0,0);detail.innerHTML=getDetail(id);}
+function back(){detail.style.display='none';home.style.display='block';current=null;}
+function setLang(l){L=l;document.querySelectorAll('.lang button').forEach(b=>b.classList.remove('active'));document.getElementById('b-'+l).classList.add('active');renderHome();}
+renderHome();
+</script>
+</body>
+</html>
